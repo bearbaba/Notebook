@@ -303,5 +303,80 @@ function Hello({name, color, genter}){
 
 函数实际上也可以用`ES6`语法中的箭头函数代替。
 
+### 抽离组件
+
+为了方便管理，一般都需要将组件进行抽离，将相关代码另置一个文件中，然后再导入到`index.js`中，组件的文件一般放在`components/`下，文件的名称是组件名称首字母小写。
+
+在组件的文件内，由于组件是`React`的组件，所以需要使用`import React from 'react'`，同时还需要使用`export`将组件导出，组件名称首字母需要进行大写。
+
+```jsx
+import React from 'react'; 
+
+function Hello({ name, color, genter }) {
+  return (
+    <h1>
+      名字：{name} 毛色：{color} 性别：{genter}
+    </h1>
+  );
+}
+
+export default Hello;
+```
+
+但是这个时候我们在`index.js`中导入组件时需要将组件的后缀名也要写进来，否则就会报错，例：
+
+```js
+import Hello from './components/hello.jsx'
+```
+
+原因在于我们还未对 React 进行相关的配置。
+
+在`webpack.config.js`文件中的`module.export={}`内添加`resolve:{}`，在`resolve`值内增加`extensions`用于配置省略文件后缀名。例：
+
+```js
+//从最基本的 webpack 到目前为止所用到的全部配置
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const htmlPlugin = new HtmlWebpackPlugin({
+  template: path.join(__dirname, './src/index.html'),
+  filename: 'index.html'
+})
+
+module.exports={
+  mode: 'development',
+  plugins: [
+    htmlPlugin,
+  ],
+  module: { 
+    rules:[{
+      test: /\.js|jsx$/,
+      use: "babel-loader",
+      exclude: /node_modules/
+    }] 
+  },
+  resolve: { 
+    extensions:['.js', '.jsx', '.json'] 
+  }
+}
+```
+
+## Webpack 配置文件根目录路径
+
+我们一般导入自己写的组件或者其他文件时，都需要完整的指出这个文件的相对路径位置，这可能有一些不太方便，我们可以指定某一个文件夹作为根目录，例如指定`src/`文件夹为`@`路径，那么就可以使用`@`代替`src/`了。
+
+同样需要在`webpack.config.js`中配置，这时我们需要在上一节内容的`resolve`键值对内配置。
+
+```js
+//... 省略
+resolve:{
+    //...省略
+    alias:{
+        '@': path.join(__dirname, '/src')
+    }
+}
+```
+
+
+
 
 
