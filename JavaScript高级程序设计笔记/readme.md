@@ -99,4 +99,146 @@
 
 ## 基本概念
 
- 
+### 语法
+
+JavaScript 的标准是 ECMAScript ，它的语法大量借鉴了 C 及其它类 C 语言的语法。
+
+#### 区分大小写
+
+ECMAScript 中的一切（变量、函数和操作符）都区分大小写。
+
+#### 标识符
+
+所谓标识符就是指变量、函数、属性的名字，或者函数的参数，它需要符合下列格式规则组合起来的一个或多个字符：
+
+* 第一个字符必须是一个字母、下划线（_）或者一个美元符号（$）；
+* 其它字符可以是一个字母、下划线、美元符号或数字。
+
+ECMAScript 标识符采用驼峰大小写格式，也就是一个字母小写，剩下的每个有意义的单词的首字母大写，例：
+
+firstSecond
+myCar
+
+#### 注释
+
+ECMAScript 使用 C 风格的注释，包括单行注释和块级注释。单行注释以两个斜杠开头，
+
+```js
+// 单行注释
+```
+
+块级注释以一个斜杠和一个星号（/*）开头，以一个星号和一个斜杠（*/）结尾，
+
+```js
+/*
+这是
+块级
+注释
+*/
+```
+
+#### 严格模式
+
+ECMAScript 5 (以后均简称 ES5) 引入了严格模式（strict mode）的概念，严格模式是为 JavaScript 定义了一种不同的解析与执行模型。在严格模式中，某些不安全的操作会抛出错误。为启用严格模式可以在顶部添加如下代码：
+
+```js
+"use strict";
+```
+
+这一行是编译指示，用于告诉支持的 JavaScript 引擎切换到严格模式。
+
+在函数内部上方包含这条编译指示，也可以指定函数在严格模式下执行：
+
+```js
+function doSomething(){
+    "use strict";
+    // 函数体
+}
+
+#### 语句结尾
+
+只有在下一行开头是方括号、括号、正则表达式开头的斜杠、加号、减号的情况下才需要在这一行使用`;`作为结尾。
+
+#### 变量
+
+ECMAScript 的变量是松散类型的，所谓松散类型就是可以用来保存任何类型的数据。
+
+定义变量使用`var`标识符，后跟变量名。
+
+在函数中使用`var`声明的变量成为定义该变量作用域中的局部变量，它会在函数退出后被销毁。
+
+```js
+function test(){
+    var message = 10
+    console.log(message)
+}
+
+test()
+console.log(message) // 这里会报错
+```
+
+但是如果在函数作用域内不使用`var`声明该变量，而直接为它赋值，那么它将成为全局作用域内的变量。
+
+```js
+function test(){
+    message = "hi"
+    console.log(message)
+}
+
+test() // 这里就正常了
+```
+
+可以使用一条语句定义多个变量，只要把各个变量用逗号分隔开即可。
+
+```js
+var message = "hi",
+    found = false,
+    age = 29
+```
+
+代码里的换行与变量的缩进并不是必须的，但是为了增进代码可读性可以这么做。
+
+### 数据类型
+
+ECMAScript 中有5种简单数据类型（也称为基本数据类型）： Undefined 、 Null 、 Boolean 、 Number 和 String 。
+
+还有一种复杂数据类型 Object 对象，实际上 JS 中的大部分数据类型都是 Object 类型。
+
+Undefined 类型实际上只有一个值——`undefined`。
+
+#### typeof 操作符
+
+`typeof`用于检测给定变量的数据类型——`typeof`就是负责提供这方面信息的操作符，对一个值使用`typeof`操作符可能会返回下面某个字符串：
+
+* `"undefined"`——如果这个值未定义；
+* `"boolean"`——如果这个值是布尔值；
+* `"string"`——如果这个值是字符串；
+* `"number"`——如果这个值是数值；
+* `"object"`——如果这个值是对象或`null`;
+* `"function"`——如果这个值是函数。
+
+下面是使用`typeof`操作符的例子：
+
+```js
+var message = "some string"
+console.log(typeof message)
+console.log(typeof(message))
+console.log(typeof 95)
+```
+
+`typeof`是一个操作符，而不是一个函数，所以可以不必使用括号。
+
+`typeof null`会返回`object`，因为`null`被当作了一个空的对象引用。
+
+对未初始化的变量执行`typeof`操作符会返回`undefined`，而对未声明的变量执行`typeof`操作符也会返回`undefined`。
+
+```js
+var message
+
+console.log(typeof message) // 这毋庸置疑返回的是 undefined
+console.log(typeof age) // 也返回 Undefined , 这就很奇怪了，不是吗？
+```
+
+#### Null 类型
+
+Null 类型也是只含有一个值的数据类型，这个值是`null`。`null`值表示一个空对象指针，这也是使用 typeof 
