@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    var sum1=function(a, b){
+      console.log(a)
+      sum(a, b)
+    }
+    var sum2 = function(a, b){
+      sum(a, b)
+    }
+    function sum(a, b){
+      console.log(arguments.callee.caller)
+      return a+b
+    }
+    sum1(2, 3)
+    sum2(4, 6)
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
