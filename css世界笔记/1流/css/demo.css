@@ -1,0 +1,14 @@
+.clear::after{
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.box{
+  background: red;
+  padding: 10px;
+}
+
+.box > img{
+  float: left;
+}
