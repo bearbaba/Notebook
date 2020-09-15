@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    function Person(){}
+      Person.prototype._name = "Nicholas"
+      Person.prototype.age = 27
+      Person.prototype.job = "Software Engineer"
+      Person.prototype.sayName = function(){
+        console.log(this._name)
+      }
+    var person1 = new Person()
+    var person2 = new Person()
+    person1.sayName()
+    console.log(person1.sayName == person2.sayName)
+  </script>
+</head>
+<body>
+  
+</body>
+</html>

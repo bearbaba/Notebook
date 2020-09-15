@@ -273,3 +273,217 @@ o.sayName() // "kriSten"
 
 如果不使用`new`操作符调用`Person()`时，属性和方法都被添加给了`window`对象。也可以使用`call()`在某个对象的作用域中调用`Person()`函数，例如`o`对象作用域中调用了`Person()`函数，所以`o`就拥有了所有属性和`sayName()`方法。
 
+2.构造函数的问题
+
+构造函数模式的问题在于每个方法都要在每个实例上重新创建一遍，也即是说每个实例上生成的函数实际上是不相等的，即使它们的执行过程并无二致。
+
+```js
+person1.sayName == person2.sayName // false
+```
+
+我们完全可以在构造函数外部来定义函数，再将它赋值给指向不同对象的`this`。
+
+```js
+function Person(name, age, job){
+    this.name = name
+    this.age = age
+    this.job = job
+    this.sayName = sayName
+}
+
+function sayName(){
+    console.log(this.name)
+}
+
+var person1 = new Person("Nicholas", 29, "Software Engineer")
+var person2 = new Person("Greg", 27, "Doctor")
+
+person1.sayName()
+console.log(person1.sayName == person2.sayName)
+```
+
+这个时候不同对象的`sayName`实际上是相同的了，因为它们实际上是同一个全局作用域内的`sayName()`方法。
+
+但是这样依然是有问题的，这个全局作用域内的函数实际上只能被对象使用，并不能指望它独自运行。而且如果对象需要定义很多方法，那么就需要定义很多全局函数，这个时候它的封装性也就荡然无存了。
+
+#### 原型模式
+
+我们创建的每个函数都有一个`prototype`（原型）属性，这个属性是一个指针，指向一个对象，而这个对象的作用是包含可以由特定类型的所有实例共享的属性和方法。实际上`prototype`就是通过调用构造函数而创建的那个对象实例的原型对象。使用原型对象可以让所有对象实例共享它所包含的属性和方法。
+
+```js
+function Person(){}
+Person.prototype._name = "Nicholas"
+Person.prototype.age = 27
+Person.prototype.job = "Software Engineer"
+Person.prototype.sayName = function(){
+    console.log(this._name)
+}
+var person1 = new Person()
+var person2 = new Person()
+person1.sayName()
+console.log(person1.sayName == person2.sayName) // 这里是 true
+```
+
+`prototype`是存在这个函数内，不能绑定到`this`上。
+
+我们把所有属性和方法都添加到了`Person`和`prototype`属性上，构造函数变成了空函数。但仍然可以通过调用构造函数来创建新对象，而且新对象还会具有相同的属性和方法。但与构造函数不同的是，新对象的属性与方法是有所有实例共享的。因而`person1`和`person2`访问的都是同一属性和同一个`sayName()`函数。
+
+1.理解原型对象
+
+只要创建了一个新函数，就会根据一组特定的规则为该函数创建一个`prototype`属性，这个属性指向函数的原型对象。默认情况下，所有原型对象都会自动获得一个`constructor`（构造函数）属性，这个属性包含一个指向`prototype`属性所在函数的指针。`Person.prototype.constructor`指向`Person`，而通过这个构造函数，还可以继续为原型对象添加其它属性和方法。
+
+在创建了自定义的构造函数之后，其原型对象默认会取得`constructor`属性，其它方法则都是从`Object`继承而来的。当调用构造函数创建一个新实例之后，该实例的内部将包含一个指针（内部属性），指向构造函数的原型对象，这个指针可以叫做`[[Prototype]]`，`[[Prototype]]`这个属性无法被访问，但在 Firefox 、 Safari 和 Chrome 在每个对象上都支持一个属性`__proto__`，但需要注意的是这个连接存在于实例与构造函数的原型对象之间，而不是存在于实例与构造函数之间。
+
+虽然所有实现中都无法访问`[[Prototype]]`，但可以通过`isPrototypeOf()`方法来确定对象之间是否存在这个关系，如果`[[Prototype]]`指向调用`isPrototypeOf()`方法的对象（`Person.prototype`），那么这个方法就返回`true`。
+
+```js
+Person.prototype.isPrototypeOf(person1) // true
+Person.prototype.isPrototypeOf(person2) //true
+```
+
+`person1`与`person2`都指向了`Person.prototype`的指针，因此都返回了`true`。
+
+ES5 增加了一个新方法，叫`Object.getPrototypeOf()`，在所有支持的实现中，这个方法返回`[[Prototype]]`的值。
+
+```js
+Object.getPrototypeOf(person1) == Person.prototype // true
+console.log(Object.getPrototypeOf(person1).name) // "Nicholas
+```
+
+第一行表示`Object.getPrototypeOf()`返回的对象实际上就是这个对象的原型。使用`Object.getPrototypeOf()`可以方便地取得一个对象的原型。
+
+在代码读取某个对象的某个属性时，都会执行一次搜索，搜索目标是具有给定名字的属性，搜索首先从对象实例开始，如果在实例中找到了具有给定名字的属性，则返回该属性的值，如果没有找到则继续搜索指针指向的原型对象，在原型对象中查找具有给定名字的属性。
+
+虽然可以通过对象实例访问保存在原型中的值，但不能通过对象实例重写原型中的值，如果我们在实例中添加了一个属性，而该属性与实例原型中的一个属性同名，那么该属性会屏蔽原型中的属性。
+
+```js
+function Person(){}
+Person.prototype.name = "Nicholas"
+Person.prototype.age= 20 
+Person.prototype.job = "Software Engineer"
+Person.prototype.sayName = function(){
+    console.log(this.name)
+}
+var person1 = new Person()
+var person2 = new Person()
+person1.name = "Greg"
+console.log(person1.name) // Greg
+console.log(person2.name) // Nicholas
+```
+
+这个例子中的`person1`的`name`被一个新值给屏蔽了，因而返回的是实例属性上的值，而`person2`的值返回的是对象原型上的值。
+
+使用`hasOwnProperty()`方法可以检测一个属性是存在于实例中，还是存在于原型中，这个方法只在给定属性存在于对象实例中时，才会返回`true`。
+
+```js
+function Person(){}
+Person.prototype.name = "Nicholas"
+Person.prototype.age = 29
+Person.prototype.job = "Software Engineer"
+Person.prototype.sayName = function(){
+    console.log(this.name)
+}
+
+var person1 = new Person()
+var person2 = new Person()
+
+console.log(person1.hasOwnProperty("name")) // false 原型属性返回false
+
+person1.name = "Greg"
+console.log(person1.hasOwnProperty("name")) //true 来自实例
+
+console.log(person2.hasOwnProperty("name")) // false 来自原型
+```
+
+2.原型与 in 操作符
+
+单独使用时`in`操作符会在通过对象能够访问给定属性时返回`true`，无论这个属性存在于实例中还是原型中。
+
+```js
+function Person(){}
+
+Person.prototype.name = "Nicholas"
+Person.prototype.age = 29
+Person.prototype.job = "Software Engineer"
+Person.prototype.sayName = function(){
+    console.log(this.name)
+}
+
+var person1 = new Person()
+var person2 = new Person()
+
+console.log(person1.hasOwnProperty("name")) //false
+console.log("name" in person1) // true
+```
+
+在使用`for-in`循环时，返回的是所有能够通过对象访问的、可枚举（ enumerated )属性，无论这个属性是属于实例中的，还是属于原型对象中的，都可以返回。如果原型是不可枚举的，但是却又被实例所覆盖的，也是可以通过`for-in`返回的，但是在早期 IE8 及更早版本中却不能实现。
+
+要取得实例内所有可枚举的属性，可以使用 ES5 中的`Object.keys()`方法。这个方法接收一个对象作为参数，返回一个包含所有可枚举属性的字符串数组。
+
+```js
+function Person(){}
+
+Person.prototype.name = "Nicholas"
+Person.prototype.age = 29
+Person.prototype.job = "Software Engineer"
+Person.prototype.sayName = function(){
+    console.log(this.name)
+}
+
+var keys = Object.keys(Person.prototype)
+console.log(keys) // "name, age, job, sayName"
+
+var p1 = new Person()
+p1.name = "Rob"
+p1.age = 31
+var p1keys = Object.keys(p1)
+console.log(p1keys) // "name, age"
+```
+
+如果需要得到所有实例属性，无论它是否可枚举，都可以使用`Object.getOwnPropertyNames()`方法。
+
+```js
+var keys = Object.getOwnPropertyNames(Person.prototype)
+console.log(keys) //"constructor, name, job, sayName"
+```
+
+这其中就包含了不可枚举的`constructor`。
+
+3.更简单的原型语法
+为了减少不必要的输入，更常见的做法是用一个包含所有属性和方法的对象字面量来重写整个原型对象。
+
+```js
+function Person(){}
+
+Person.prototype = {
+    name: "Nicholas",
+    age: 29,
+    job: "Software Engineer",
+    sayName: function(){
+        console.log(this.name)
+    }
+}
+```
+
+需要注意的是，这里的`constructor`不再指向`Person`对象，而是指向了`Object`构造函数，因为每创建一个函数，就同时会创建它的`prototype`对象，这个对象也会自动获得`constructor`，而这里则完全重写了默认的`prototype`对象。`instanceof`操作符还能返回正确的结果，但通过`constructor`已经不能确定对象的类型了。
+
+```js
+var person1 = new Person();
+console.log(person1.constructor == Person) // false
+```
+
+如果它非常重要，可以使用下面的方式，将`constructor`放回适当的位置：
+
+```js
+function Person(){
+}
+
+Person.prototype = {
+    constructor: Person,
+    name: "Nicholas",
+    sayName: function(){
+        console.log(this.name)
+    }
+}
+```
+
