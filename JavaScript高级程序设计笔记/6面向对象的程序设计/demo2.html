@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    var array = ["red","align"]
+    function SecialArray(){
+      var values = new Array()
+
+      values.push.apply(values, arguments)
+      values.push("hel")
+
+      return values
+    }
+
+    var new_values = new SecialArray(array)
+    console.log(new_values)
+  </script>
+</head>
+<body>
+  
+</body>
+</html>

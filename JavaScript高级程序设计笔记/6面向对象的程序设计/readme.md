@@ -602,3 +602,133 @@ console.log(person1.friends == person2.friends) // true
 
 #### 组合使用构造函数模式和原型模式
 
+创建自定义类型最常见方式，就是组合使用构造函数模式与原型模式。构造函数模式用于定义实例属性，而原型模式用于定义方法和共享属性。因而每个实例会拥有自己实例属性的副本，但同时又能共享对方法的引用。这种混合模式还支持向构造函数传递参数。
+
+```js
+function Person(name, age, job){
+    this.name = name
+    this.age = age
+    this.job = job
+    this.friends = ["Shelby", "Court"]
+}
+
+Person.prototype = {
+    constructor: Person
+    sayName: function(){
+        console.log(this.name)
+    }
+}
+
+var person1 = new Person("Nicholas", 20, "Software Engineer")
+var person2 = new Person("Greg", 27, "Doctor")
+
+person1.friend.push("Van")
+console.log(person1.friends) // "Shelby, Count, Van"
+console.log(person2.friends) // "Shelby, Count"
+console.log(person1.friends === person2.friends) //false
+console.log(person1.sayName === person2.sayName) //true
+```
+
+在这里修改了`person1`中的实例属性并不会影响到`person2`的实例属性。
+
+这种构造函数与原型混成的模式，是目前在 ES 中使用最广泛、认同度最高的一种创建自定义类型的方法。
+
+#### 动态原型模式
+
+动态原型模式把所有信息封装到了构造函数中，通过在构造函数中初始化原型保持同时使用构造函数和原型的优点。
+
+```js
+function Person(name, age, job){
+    this.name = name
+    this.age = age
+    this.job = job
+
+    if(typeof this.sayName != "function"){
+
+        Person.prototype.sayName = function(){
+            console.log(this.name)
+        }
+    }
+}
+
+var friend = new Person("Nicholas", 29, "Software Engineer")
+friend.sayName()
+```
+
+这里只在`sayName()`方法不存在的情况下，才会将它添加到原型中。这段代码只会在初次调用构造函数时才会执行。在此之后，原型已经完成初始化，不需要再做任何修改。这里对原型上的修改会立即在实例中得到反映。
+
+`if`语句检查的可以是初始化后存在的任何方法或属性，不必依次对每个属性和方法都使用`if`检查一遍，只要检查其中一个即可。对于这种模式创建的对象，还可以使用`instanceof`操作符确定它的类型。
+
+#### 寄生构造函数模式
+
+在前几种模式都不适用时，可以使用寄生（ parasitic ）构造函数模式。这种模式基本思想是创建一个函数，该函数作用仅仅封装创建对象的代码，然后返回新创建的对象，这个函数很像是典型的构造函数。
+
+```js
+function Person(name, age, job){
+    var o = name
+    o.name = name
+    o.age = age
+    o.job = job
+    o.sayName = function(){
+        console.log(this.name)
+    }
+    return o
+}
+
+var friend = new Person("Nicholas", 29, "Software Engineer")
+friend.sayName()
+```
+
+除了使用`new`操作符并把使用的包装函数叫做构造函数之外，这个模式跟工厂模式其实是一模一样的。构造函数在不返回值的情况下，默认会返回新对象实例。而在构造函数的末尾添加一个`return`语句，可以重写调用构造函数返回的值。
+
+这个模式可以在特殊的情况下用来为对象创建构造函数。假设我们需要一个具有额外方法的特殊数组，由于不能直接修改`Array`构造函数，因此可以使用这个模式。
+
+```js
+function SpecialArray(){
+
+    //创建数组
+    var values = new Array()
+
+    //添加值
+    values.push.apply(values, arguments)
+
+    //添加方法
+    values.toPipedString = function(){
+        return this.join("|")
+    }
+
+    return values
+}
+
+var colors = new SpecialArray("red", "blue", "green")
+console.log(colors.toPipedString()) // "red|blue|green"
+```
+
+在这个例子中，创建了一个名叫`SpecialArray`的构造函数。首先创建了一个数组，然后`push()`方法初始化了数组的值。随后又给数组实例添加了一个`toPipedString()`方法，最后将数组以函数值返回。
+
+这种模式的问题在于返回的对象与构造函数或者与构造函数的原型属性之间没有关系，构造函数返回的对象与在构造函数外部创建的对象没有什么不同，因此不能通过`instanceof`来确定对象类型。
+
+#### 稳妥构造函数模式
+
+道格拉斯·克罗克福德发明了稳妥对象模式，这个模式没有公共属性，并且其方法也不引用`this`对象。稳妥对象适合用于一些安全环境中（这些环境会禁用`this`和`new`），或者在防止数据被其它应用程序改动时使用。
+
+```js
+function Person(name, age, job){
+
+    var o = new Object()
+
+    //可以在这里定义私有变量和函数
+
+    //添加方法
+    o.sayName = function(){
+        console.log(name)
+    }
+
+    return o
+}
+```
+
+在这个例子中，除了使用`sayName()方法外，没有其它方法能够访问`name`的值。
+
+在稳妥模式下，即使有其它代码给这个对象添加方法或数据成员，但也不可能会有其它方法访问到传入构造函数中的原始数据。
+
