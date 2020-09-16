@@ -1,0 +1,11 @@
+.father{
+  width: 150px;
+  background-color: #cd0000;
+  white-space: nowrap;
+  padding: 10px;
+}
+
+.child{
+  display: inline-block;
+  background-color: #f0f3f9;
+}
