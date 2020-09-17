@@ -732,3 +732,49 @@ function Person(name, age, job){
 
 在稳妥模式下，即使有其它代码给这个对象添加方法或数据成员，但也不可能会有其它方法访问到传入构造函数中的原始数据。
 
+### 继承
+
+#### 组合继承
+
+组合继承将原型链和借用构造函数的技术组合到一起，它的思路是使用原型链实现对原型属性和方法的继承，而通过借用构造函数来实现对实例属性的继承。
+
+```js
+function SuperType(name){
+    this.name = name
+    this.colors = ["red", "blue", "green"]
+}
+
+SuperType.prototype.sayName = function(){
+    console.log(this.name)
+}
+
+function SubType(name, job){
+
+    // 继承属性
+    SuperType.call(this, name)
+
+    this.age = age
+}
+
+// 继承方法
+SubType.prototype = new SuperType()
+
+SubType.prototype.sayAge = function(){
+    console.log(this.age)
+}
+
+var instance1 = new SubType("Nicholas", 29)
+instance1.colors.push("black")
+console.log(instance1.colors) // "red, blue, green, black"
+instance1.sayName() // "Nicholas"
+instance1.sayAge() //29
+
+var instance2 = new SubType("Greg", 27)
+console.log(instance2.colors) //"red, blue, green"
+instance2.sayName() //"Greg"
+instance2.sayAge() // 27
+```
+
+在这里，`SuperType`构造函数定义了两个属性：`name`和`colors`。`SuperType`的原型定义了一个方法`sayName()`。`SubType`构造函数在调用`SuperType`构造函数时传入了`name`参数，然后又定义了它自己的属性`age`。将`SuperType`的实例赋值给了`SubType`的原型，然后又在该新原型上定义了方法`sayAge()`。
+
+`instanceof`和`isPrototypeOf()`能够用于识别基于组合继承创建的对象。

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    function SuperType(name) {
+      this.name = name
+      this.age = [12, 31, 45]
+      SuperType.prototype.sayName = function () {
+        console.log(this.name)
+      }
+    }
+
+
+    function SubType(name, color) {
+      SuperType.call(this, name)
+      this.color = color
+    }VVVVVV
+    
+    SubType.prototype = new SuperType()
+
+    var instance = new SubType("Hi", "red")
+
+    instance.sayName()
+    console.log(instance.color)
+  </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
