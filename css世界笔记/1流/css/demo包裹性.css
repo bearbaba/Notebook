@@ -1,0 +1,15 @@
+.box {
+  text-align: center;
+  padding: 10px;
+  background-color: #e44848;
+}
+
+.content {
+  text-align: left;
+  display: inline-block;
+}
+
+.root {
+  width: 240px;
+  margin: 20px;
+}

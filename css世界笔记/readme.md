@@ -128,7 +128,7 @@ a {
 }
 ```
 
-```html
+``` html
 <h4>width:100%</h4>
 <div class="nav">
 
@@ -139,7 +139,7 @@ a {
 </div>
 ```
 
-我们在这里为`a`标签设置了`width: 100%`，却使得`a`标签的尺寸超过了容器的尺寸。
+我们在这里为 `a` 标签设置了 `width: 100%` ，却使得 `a` 标签的尺寸超过了容器的尺寸。
 
 ![示例图片](./1流/img/1.png)
 
@@ -147,14 +147,14 @@ a {
 
 ##### 格式化宽度
 
-格式化宽度出现在“绝对定位模型中”，也就是出现在`position`属性值为`absolute`或`fixed`的元素中。在默认情况下，绝对定位元素的宽度表现为“包裹性”，宽度由内部尺寸决定。
+格式化宽度出现在“绝对定位模型中”，也就是出现在 `position` 属性值为 `absolute` 或 `fixed` 的元素中。在默认情况下，绝对定位元素的宽度表现为“包裹性”，宽度由内部尺寸决定。
 
 有一种情况元素尺寸会由外部元素决定，
 
-当`right/left`或`bottom/top`同时存在时，元素的宽度表现为“格式化宽度”，其宽度大小相对于最近的具有定位特性（`position`属性值不是`static`）的祖先元素计算。例如:
+当 `right/left` 或 `bottom/top` 同时存在时，元素的宽度表现为“格式化宽度”，其宽度大小相对于最近的具有定位特性（ `position` 属性值不是 `static` ）的祖先元素计算。例如:
 
-```css
-div{
+``` css
+div {
     position: absolute;
     left: 40px;
     right: 40px;
@@ -165,6 +165,205 @@ div{
 
 #### 内部尺寸与流体特性
 
-内部尺寸是指元素的宽度由内部元素内容决定，如果这个元素内部没有内容，那么它就具有内部尺寸。
+内部尺寸是指元素的宽度由内部元素内容决定，如果这个元素内部没有内容，宽度为0，那么它就具有内部尺寸。
 
+##### 包裹性
+
+包裹性是对 shrink-to-fit 的一种称谓，包裹性除了有“包裹”，还具有“自适应性”。
+
+自适应性是指元素尺寸由内部元素决定，但永远小于“包含块”容器的尺寸（除非容器小于元素的“首选最小宽度”）。
+
+对于一个元素，如果其 `display` 属性值是 `inline-block` ，那么即使其里面内容再多，只要是正常文本，宽度不会超过容器。除非“首选最小宽度”比容器宽度还大，否则我们完全不需要担心某个元素内容太多而破坏了布局。
+
+``` html
+<button>按钮</button>
+<input type="button" value="按钮">
+```
+
+按钮就是 CSS 世界中最有代表性的 `inline-block` 元素，具体表现为：按钮文字越多宽度越宽（内部尺寸特性），但如果文字太多，也会在容器的宽度处自动换行。
+
+`<button>` 会换行， `<input>` 按钮默认 `white-space: pre` 是不会换行的，需要将 `pre` 值重置为 `normal` 。
+
+如果我们有这样的需求：页面某个模块的文字内容是动态的，可能是几个字，也可能是一句话。然后，希望文字少的时候居中显示，文字超过一行的时候居左显示。
+
+``` css
+.box {
+    text-align: center;
+    padding: 10px;
+    background-color: #e44848;
+}
+
+.content {
+    text-align: left;
+    display: inline-block;
+}
+```
+
+![示例图片](./1流/img/demo3.png)
+
+![示例图片](./1流/img/demo4.png)
+
+除了 `inline-block` 元素，浮动元素以及绝对定位元素都具有包裹性。
+
+##### 首选最小宽度
+
+首选最小宽度是指元素最适合的最小宽度。
+
+在 CSS 中，图片和文字的权重是要大于布局的，因此 CSS 的设计不会让图文在 `width: auto` 时让宽度为0的。此时表现的宽度就是“首选最小宽度”。
+
+* 东亚文字，最小宽度为每个汉字的宽度，
+* 西方文字最小宽度由特定的连续的英文字符单元决定。并不是所有英文字符都会组成连续单元，一般会终止于空格、短横线、问号及其它非英文字符。
+
+如果想让英文字符和中文一样，每一个字符都用最小宽度单元，可以尝试 `word-break: break-all` 。
+
+在 IE8 中，CSS 中的盒阴影和背景渐变全都无法使用，可以利用“首选最小宽度”的行为特点把需要的图形勾勒出来。
+
+``` css
+.ao {
+    font-size: 14px;
+    display: inline-block;
+    width: 0;
+    margin: 35px;
+    color: #ffffff;
+}
+
+.ao::before {
+    content: "love 你 love";
+    outline: 2px solid #adadad;
+}
+```
+
+![运行结果](./1流/img/ao.png)
+
+##### 最大宽度
+
+最大宽度就是元素可以有的最大宽度。最大宽度等同于“包裹性”元素设置`white-space: nowrap`声明后的宽度。如果内部没有块级元素或者块级元素没有设定宽度值，则最大宽度实际是最大连续内联盒子的宽度。
+
+这里可以将内联盒子简单地理解为`display`的值是`inline`、`inline-block`、`inline-table`等元素。连续内联盒子指的是全部都是内联级别的一个或一堆元素，中间没有任何的换行标签或其它块级元素。
+
+### CSS 流体布局下的宽度分离原则
+
+所谓宽度分离原则，就是 CSS 中的`width`属性不与影响宽度的`padding/border`（有时候包括`margin`）属性共存，也就是不能出现以下的组合：
+
+```css
+.box{
+    width: 100px;
+    border: 1px solid;
+}
+```
+
+```css
+.box{
+    width: 100px;
+    padding: 20px;
+}
+```
+
+正确的写法应当是：
+
+```css
+.father{
+    width: 180px;
+}
+
+.son{
+    margin: 0 20px;
+    padding: 20px;
+    border: 1px solid;
+}
+```
+
+#### 为何要宽度分离
+
+宽度分离是为了便于维护。
+
+```css
+.box{
+    width: 100px;
+    border: 1px solid;
+}
+```
+
+在这个容器内，如果我们希望元素边框内有 20 像素的留白，此时如果我们增加`padding`设置：
+
+```css
+.box{
+    width: 100px;
+    padding: 20px;
+    border: 1px solid;
+}
+```
+
+结果此时的宽度变成了 142 像素，比原来大了 40 像素，原因在于这个容器的宽度等于`content`+`padding`的结果。
+
+如果使用宽度分离：
+
+```css
+.father{
+    width:102px;
+}
+
+.son{
+    border: 1px solid;
+}
+```
+
+嵌套一层标签，父元素定宽，子元素因为`width`使用的是默认值`auto`，所以会如水流般自动填满父级容器。如果设计师希望元素边框内有 20 像素的留白，我们增加`padding`设置：
+
+```css
+.father{
+    width: 102px;
+}
+
+.son{
+    border: 1px solid;
+    padding: 20px;
+}
+```
+
+在这里我们就不需要任何计算了，浏览器会自动的计算，完全不必担心尺寸的变化。
+
+对于绝大多数网页，只需要一个`width`设定就可以了，就是最外层用于限制网页主体内容宽度的那个`width`，而里面的所有内容都无需再出现`width`设置。但这种无宽度网页布局是需要很深的 CSS 积累才能驾驭自如的。
+
+### 改变 width/height 作用细节的 box-sizing
+
+#### box-sizing 作用
+
+`box-sizing`可以被叫做“盒尺寸的作用细节”，或者就是改变`width`的作用细节。
+
+目前这个属性只支持`content-box`与`border-box`。
+
+`box-sizing: border-box`就是让 100 像素的宽度直接作用在 border box 上，从默认的 content box 变成 border box 。那么 content box 就会从宽度值中被释放，与 padding 一起自动被分配`width`值。
+
+```css
+.box{
+    width: 100px;
+    box-sizing: border-box;
+}
+```
+
+与
+
+```css
+.box{
+    width: 100px;
+    border: 20px;
+    box-sizing: border-box;
+}
+```
+
+与
+
+```css
+.box{
+    width: 100px;
+    border: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+```
+
+宽度大小都是一致的 100 像素。
+
+#### box-sizing 不支持 margin-box
 
