@@ -367,3 +367,31 @@ div {
 
 #### box-sizing 不支持 margin-box
 
+`margin-box`不支持的理由在于它本身是没有价值的，如果一个元素使用`width`或者`height`设置好了尺寸，此时设置`margin-box`并不能改变它的`offset`尺寸。`margin`只有在`width`为`auto`的时候才能改变元素的尺寸，但是此时元素已经处于流动状态，根本就不需要`box-sizing`了。
+
+另外，对于 margin-box 而言，它是不可见的，如果需要`box-sizing`支持`margin-box`，它就不得不支持 margin-box 的背景色。
+
+#### *{box-sizing: border-box} 的使用
+
+不要使用，不要使用，不要使用！
+
+这种做法造成了没必要的消耗，对于普通内联元素，`box-sizing`并不能影响到它的尺寸表现，同时一些元素的`box-sizing`默认就是`border-box`，对于它们而言，通配符也是没有必要的。
+
+#### box-sizing 发明的初衷
+
+在 CSS 中，唯一离不开的是`box-sizing: border-box`的原生普通文本框`<input>`和`<textarea>`的 100% 自适应父容器宽度。
+
+替换元素的特性之一是尺寸由内部元素决定，无论其`display`属性值是`inline`还是`block`。
+
+`<textarea>`就是一个替换元素，所以，我们只能通过`width`设定让`<textarea>`尺寸 100% 自适应父容器，然而`<textarea>`是有`border`的，而且需要`padding`，否则输入的光标会顶着边框，因而，`width/border`和`padding`注定要共存，同时还要整体 100% 宽度自适应容器。
+
+如果我们使用了`box-sizing: border-box`就能允许让非替换元素在`width`明确设定为 100% 的条件下，让它的`padding`与 content-box 能够自适应。
+
+`box-sizing: border-box`看起来使用的目的是为了解决替换元素自适应问题。
+
+### height: auto
+
+`height: auto`使用起来就比`width: auto`要单纯些，有多少个元素，它们的高度累加就是`height: auto`的高度值了。
+
+### height: 100%
+
