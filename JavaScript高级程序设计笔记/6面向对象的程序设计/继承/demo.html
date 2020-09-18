@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    function SuperType(name, age){
+      this.name=name
+      this.age = age
+
+      SuperType.prototype.sayAge = function(){
+        console.log(this.age)
+      }
+    }
+
+    function SonType(name, age, job){
+      this.job = job;
+      SuperType.call(this, name, age)
+    }
+
+    SonType.prototype = new SuperType()
+
+    var mike = new SonType("Mike", 28, "Software Engineer")
+    mike.sayAge()
+  </script>
+</head>
+<body>
+  
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    function Super(name, age){
+      this.name = name
+      this.age = age
+      Super.prototype.sayName = function(){
+        console.log(name)
+      }
+    }
+
+    function SubType(name, color){
+      Super.call(this, name)
+      this.color = color
+      SubType.prototype.sayColor = function(){
+        console.log(color)
+      }
+    }
+
+    SubType.prototype = new Super()
+
+    var person = new SubType("Greg", "blue")
+
+    person.sayName()
+
+    var person1 = new Super("Mike", 23)
+    
+    person1.sayName()
+
+    console.log(person.color)
+
+    console.log(person1.age)
+
+    console.log( person1 instanceof SubType)
+
+    console.log( person instanceof Super )
+
+  </script>
+
+</head>
+<body>
+  
+</body>
+</html>
