@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    var pageWidth = window.innnerWidth
+    var pageHeight = window.innerHeight
+
+    if (typeof pageWidth != "number") {
+      if (document.compatMode == "CSS1Compat") {
+        pageWidth = document.documentElement.clientWidth
+        pageHeight = document.documentElement.clientHeight
+      } else {
+        pageWidth = document.body.clientWidth
+        pageHeight = document.body.clientHeight
+      }
+    }
+
+    console.log(pageHeight)
+    console.log(pageWidth)
+  </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
