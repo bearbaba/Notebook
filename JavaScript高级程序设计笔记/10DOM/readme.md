@@ -44,3 +44,44 @@ if(someNode.nodeType == 1){
 
 可以通过方括号语法来访问`NodeList`的值，而且这个对象也有`length`属性，但它不是`Array`实例。DOM 的动态变化会反映到`NodeList`上。
 
+我们可以通过方括号或者使用`item()`方法来访问保存在`NodeList`中的节点。
+
+### Document
+
+JS 通过`Document`表示文档。在浏览器中，`document`对象是`HTMLDocument`的一个实例，表示整个 HTML 页面。`document`对象是`window`对象的一个属性，因此可以将其作为全局对象来访问。`Document`节点具有下列特征：
+
+* `nodeType`的值为9；
+* `nodeName`的值为`"#document"`；
+* `nodeValue`的值为`null`；
+* `parentNode`的值为`null`；
+* `ownerDocument`的值为`null`；
+* 其子节点可能是一个`DocumentType`（最多一个）、`Element`（最多一个）、`ProcessingInstruction`或`Comment`。
+  
+通过这个文档对象可以取得与页面有关的信息，而且还能操作页面的外观极其底层结构。
+
+#### 文档子节点
+
+`documentElement`属性始终指向 HTML 页面中的`<html>`元素，因此可以通过这个属性进行访问，`childNodes`列表也可以访问文档元素。
+
+```html
+<html>
+
+<body>
+
+</body>
+  <script>
+    var html = document.documentElement
+    console.log(html === document.childNodes[0]) // true
+    console.log(html === document.firstChild) //true
+  </script>
+</html>
+```
+
+`document.body`直接指向`<body>`元素，
+
+`document.doctype`取得对`<!DOCTYPE>`的引用，然而这个属性在不同浏览器里表现并不一致，用处很有限。
+
+#### 文档信息
+
+`document.title`包含`<title>`元素中的文本。可以修改它并且修改后能体现在浏览器的标题栏中。
+
