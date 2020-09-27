@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div>
+    <a href="./img/1.jpg" onclick="showPic(this); return false;">图片1</a>
+    <a href="./img/2.jpg" onclick="showPic(this); return false;">图片2</a>
+    <a href="./img/3.jpg" onclick="showPic(this); return false">图片3</a>
+    <a href="./img/4.jpg" onclick="showPic(this); return false">图片4</a>
+    <a href="./img/5.jpg" onclick="showPic(this); return false">图片5</a>
+  </div>
+
+  <img id="img" src="./img/占位符.png" alt="">
+  <script>
+    function showPic(whichpic) {
+      var img = document.getElementById("img")
+      var source = whichpic.getAttribute("href")
+      img.setAttribute("src", source)
+    }
+  </script>
+</body>
+
+</html>
