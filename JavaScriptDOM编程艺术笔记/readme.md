@@ -146,3 +146,68 @@ node.nodeType;
 
 `firstChild`与`lastChild`分别表示`childNodes`数组中第一个元素与最后一个元素。
 
+## 扩展图片库
+
+我们现在通过`document.getElementsByTag("a")`来获取全部`<a>`标签，再依次为它们的`onclick`事件绑定上相关能够改变`<img>`标签`src`属性的函数。
+
+不过在为`onclick`绑定函数前，需要检测下相关获取节点的方法是否存在，如果使用的是早期 IE 浏览器，相关方法就不一定存在，检测的方法很简单，如果相关方法存在则它一定为`true`。
+
+```js
+function prepareGallery(){
+  if (!document.getElementsByTagName) {
+    return false
+  }
+
+  if (!document.getElementById) {
+    return false
+  }
+
+  if (!document.getElementById("img")) {
+    return false
+  }
+```
+
+检测之后就可以依次为`<a>`标签`onclick`事件绑定相关方法了。
+
+```js
+var links = document.getElementsByTagName("a");
+for (var i = 0; i < links.length; i++) {
+  links[i].onclick = function () {
+    showPic(this);
+    return false;
+  };
+}
+```
+
+在 JS 中获取当前引用的元素，只需要在函数内使用`this`就行了。
+
+### 网页加载后执行函数
+
+我们必须执行`prepareGallery`函数后才能对`onclick`进行绑定。
+
+如果马上执行这个函数，它是无法工作的，它必须要等到 HTML 文档加载完成后才能执行`prepareGallery`函数。
+
+网页加载完毕时会触发一个`onload`事件，这个事件与`window`相关联，我们需要将`prepareGallery`函数绑定到这个事件上。
+
+```js
+window.onload = prepareGallery
+```
+
+然而这个事件有一个缺陷，它不同绑定多个函数，如果它绑定多个函数，它只会执行顺序排列的最后一个函数。
+
+```js
+window.onload = fun1
+window.onload = fun2
+```
+
+如上，`onload`事件触发时只会执行`fun2`。
+
+如果需要为`onload`绑定多个事件，那么需要使用`addLoadEvent`函数，它只有一个参数，在`onload`触发时执行的函数名字。
+
+```js
+addLoadEvent(fun1)
+addLoadEvent(fun2)
+```
+
+如上，`addLoadEvent`为`onload`事件添加了两个函数，而这两个函数也都会被执行。
+AS
