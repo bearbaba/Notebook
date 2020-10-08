@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    function appText() {
+      var p = document.getElementById("root")
+      var text = document.createTextNode("Hello World")
+      p.appendChild(text)
+    }
+
+    function addLoadEvent(func) {
+      var oldAddLoadEvent = window.onload
+      if (typeof window.onload !== "function") {
+        console.log("方法")
+        window.onload = func
+      } else {
+        window.onload = function () {
+          oldAddLoadEvent()
+          func
+        }
+      }
+    }
+    addLoadEvent(appText)
+  </script>
+
+</head>
+<body>
+
+  <p id="root"></p>
+
+</body>
+</html>

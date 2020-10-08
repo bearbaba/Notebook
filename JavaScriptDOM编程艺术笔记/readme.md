@@ -190,24 +190,181 @@ for (var i = 0; i < links.length; i++) {
 网页加载完毕时会触发一个`onload`事件，这个事件与`window`相关联，我们需要将`prepareGallery`函数绑定到这个事件上。
 
 ```js
-window.onload = prepareGallery
+window.onload = prepareGallery;
 ```
 
 然而这个事件有一个缺陷，它不同绑定多个函数，如果它绑定多个函数，它只会执行顺序排列的最后一个函数。
 
 ```js
-window.onload = fun1
-window.onload = fun2
+window.onload = fun1;
+window.onload = fun2;
 ```
 
 如上，`onload`事件触发时只会执行`fun2`。
 
 如果需要为`onload`绑定多个事件，那么需要使用`addLoadEvent`函数，它只有一个参数，在`onload`触发时执行的函数名字。
 
+`addLoadEvent`函数并不是由系统所提供的，而是由我们手动添加的，它的内容是：
+
 ```js
-addLoadEvent(fun1)
-addLoadEvent(fun2)
+function addLoadEvent(func){
+  var oldLoadEvent = window.onload
+  if(typeof window.onload !== "function"){
+    window.onload = func
+  }
+  else{
+    window.onload = function(){
+      oldLoadEvent()
+      func()
+    }
+  }
 ```
 
-如上，`addLoadEvent`为`onload`事件添加了两个函数，而这两个函数也都会被执行。
-AS
+关键在于在我们未加载 DOM 之前，`window.onload`是`"object"`类型的，在它已经加载之后，`window.onload`是`"function"`类型的。
+
+```js
+addLoadEvent(fun1);
+addLoadEvent(fun2);
+```
+
+如上，`addLoadEvent`为`onload`事件添加了两个函数，而这两个函数则都会被执行。
+
+但实际上我们可以使用一个匿名函数中包含两个函数的方式，为`window.onload`添加两个函数。
+
+```js
+window.onload = function () {
+  func1();
+  func2();
+};
+```
+
+## 动态创建标记
+
+### document.write 方法
+
+`document.write()`方法可以快捷地把字符串插入到文档内。
+
+```html
+<body>
+  <script>
+    document.write("<p>This is inserted.</p>");
+  </script>
+</body>
+```
+
+然而`document.write()`方法违背了“行为应该与表现分离”的原则，即使把`document.write`语句挪到外部函数中，它仍然需要在标记的`<body>`部分使用`<script>`标签才能调用那个函数。
+
+另外，这样的文档很容易导致验证错误。比如说，字符串中的`"<p>"`很容易被当成真正的 HTML 标签，在`<script>`内使用`<p>`是错误的。
+
+MIME 类型的`application/xhtml+xml`与`document.write`不兼容，浏览器在呈现这种 XHTML 文档时根本不会执行`document.write`方法。
+
+### innerHTML 属性
+
+大部分浏览器都能支持`innerHTML`属性，使用这个属性可以读写某给定的 HTML 内容。
+
+比如对于以下这段内容使用`innerHTML`进行读取操作：
+
+```html
+<div id="testdiv">
+  <p>Hello World</p>
+</div>
+```
+
+```js
+var div = document.getElementById("testdiv");
+console.log(div.innerHTML);
+```
+
+这将输出`<p>Hello World</p>`，对于`innerHTML`而言，它并不能得到更加细节的内容，而是需要我们手动使用 DOM 方法和属性才能得到我们想要的内容。
+
+除了读，它还能写入内容到 HTML 中。例：
+
+```js
+div.innerHTML = "<em>Hello World</em>";
+```
+
+但是它写入的内容会覆盖原有的内容，并且我们写入的 HTML 会自动被页面渲染为相应的 HTML 标记。
+
+写入的内容会该属性使用时绑定的元素的子元素（子节点）。
+
+### createElement 方法
+
+`createElement`方法能够创建一个指定名称的 HTML 元素，例如下述代码能够创建一个 p 元素，
+
+```js
+document.createElement("p");
+```
+
+但是光创建它还不够，还需要能够插入到页面中。
+
+### appendChild
+
+`appendChild`方法能把新创建的节点插入到文档中的某个节点后，并作为它的子节点。语法：
+
+```js
+parent.appendChild(child);
+```
+
+那么现在我们就可以把用`createElement`所创建的节点，插入到现有文档树内了。
+
+```js
+var root = document.getElementById("root");
+var p = document.createElement("p");
+root.appendChild(p);
+```
+
+上述代码中手动创建的 p 元素就会在`root.appendChild(p)`使用后作为`id`值为`root`元素的子节点渲染到页面上了。
+
+### createTextNode 方法
+
+我们可以使用`createTextNode`方法创建文本节点。
+
+需要注意的是，一般我们的文本节点实际上是另一个 HTML 元素的子节点，而不是它的兄弟节点。例：
+
+```html
+<p>Hello World</p>
+```
+
+这里的文本内容`"Hello World"`就是 p 标签的子节点，并非 p 标签的兄弟节点。
+
+`createTextNode`方法的用法与`createElement`方法类似。
+
+```js
+document.createTextNode(text);
+```
+
+可以使用`appendChild`方法将文本节点插入到某个现有元素的子节点。例：
+
+```js
+var p = document.getElementById("testp");
+var text = document.createTextNode("Hello World");
+p.appendChild(text);
+```
+
+### 在已有元素前插入一个新元素
+
+DOM 提供了名为`insertBefore()`方法，这个方法将把一个新元素插入到一个现有元素的前面，语法：
+
+```js
+parentElement.insertBefore(newElement, targetElement);
+```
+
+我们需要提供目标元素的父元素（`parentElement`），新元素（`newElement`），目标元素（`targetElement`）。目标元素的父元素实际上可以写成`targetElement.parentNode`。
+
+例，在现有的 p 元素前插入一个文本子节点为"Hello"的 p 元素节点：
+
+```html
+<div id="root">
+  <p>World</p>
+</div>
+```
+
+```js
+var root = document.getElementById("root");
+var testp = root.getElementsByTagName("p")[0];
+var newElement = document.createElement("p");
+newElement.appendChild(document.createTextNode("Hello"));
+testp.parentNode.insertBefore(newElement, testp);
+```
+
+实际上这里的`testp.parentNode`就是`root`，换成`root`也是也可以运行的。

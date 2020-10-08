@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="root">
+    <p>World</p>
+  </div>
+  <script>
+    var root = document.getElementById("root")
+    var testp = root.getElementsByTagName("p")[0]
+    var newElement = document.createElement("p")
+    newElement.appendChild(document.createTextNode("Hello"))
+    testp.parentNode.insertBefore(newElement, testp)
+  </script>
+</body>
+</html>
