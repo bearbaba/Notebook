@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    function func(e1, e2, e3){
+      console.log(e1)
+      console.log(e2)
+      console.log(e3)
+    }
+    const name = "Lance";
+    const age = 23;
+    
+    func`Name is ${name}, age is ${age}`;
+
+    func('["Name is ", ", age is ", "", raw: Array(3)]', name, age)
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
