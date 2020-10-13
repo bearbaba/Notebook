@@ -368,3 +368,23 @@ testp.parentNode.insertBefore(newElement, testp);
 ```
 
 实际上这里的`testp.parentNode`就是`root`，换成`root`也是也可以运行的。
+
+### 在已有元素后插入一个元素
+
+实际上并不存在这么一个可以在已有元素后插入一个元素的方法，但是我们可以利用已存在的方法与属性去实现这个功能。
+
+```js
+function insertAfter(newElement, targetment) {
+  var parent = targetment.parentNode
+  if (parent.lastChild == targetment) {
+    parent.appendChild(newElement)
+  } else {
+    parent.insertBefore(newElement, targetment.nextSibling)
+  }
+}
+```
+
+`insertAfter`函数首先需要传入当前元素与新元素，然后保存一下当前元素的父元素，然后检查当前元素是否为当前元素父元素的最后一个子元素，如果是的话，直接使用`appendChild`方法将当前新元素插入到当前元素父元素的最后一个子节点位置上，如果不是就使用`insertBefore`插入到当前元素的下一个元素的前一个位置上。
+
+`targetment.nextSibing`就是当前元素的下一个元素，`nextSibing`是一个只读属性，不可更改。
+
