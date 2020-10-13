@@ -521,10 +521,45 @@ function func(e1, e2, e3) {
 const name = "Lance";
 const age = 23;
 
-func`Name is ${name}, age is ${age}` // 与下述语句在输出内容上相同
+func`Name is ${name}, age is ${age}`; // 与下述语句在输出内容上相同
 
 func('["Name is ", ", age is ", "", raw: Array(3)]', name, age);
 ```
 
-对于有n个插值的模板字面量，传给标签函数的表达式参数的个数始终是n，而传给标签函数的第一个参数所包含的字符串个数始终是n+1，第一个参数实际上是模板字面量中并不包含变量的字符串分隔开的字符串所组成的数组。
+对于有 n 个插值的模板字面量，传给标签函数的表达式参数的个数始终是 n，而传给标签函数的第一个参数所包含的字符串个数始终是 n+1，第一个参数实际上是模板字面量中并不包含变量的字符串分隔开的字符串所组成的数组。
 
+#### Symbol 类型
+
+Symbol(符号) 是 ES6 新增的数据类型，符号是原始值，且符号实例是唯一不可变的，符号的用途是确保对象属性使用唯一标识符，不会发生属性冲突的危险。
+
+##### 基本用法
+
+符号需要使用`Symbol()`函数初始化，因为符号本身是原始类型，所以`typeof`操作符对符号返回`symbol`。
+
+可以为`Symbol()`传递一个参数作为对符号的描述，描述可以是相同的，但是这个描述与符号定义或标识完全无关。
+
+```js
+let a = Symbol("foo");
+let b = Symbol("foo");
+console.log(a == b); // false
+```
+
+只需要创建出`Symbol()`实例并将其用作对象的新属性，就可以保证它不会覆盖已有的对象属性，无论是符号属性还是字符串属性。
+
+```js
+console.log(a); // Symbol(foo)
+
+let c = Symbol();
+console.log(c); // Symbol()
+```
+
+`Symbol()`函数不能与`new`关键字一起作为构造函数使用，这样是为了避免创建符号包装对象。
+
+但是我们可以借用`Object()`函数创建符号包装对象。
+
+```js
+let mySymbol = Symbol();
+let my = Object(mySymbol)
+```
+
+// Todo 例子准备差不多了，先看书后补笔记

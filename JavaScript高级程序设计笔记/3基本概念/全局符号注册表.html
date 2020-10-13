@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    let symbolDemo = Symbol.for("foo")
+    console.log(symbolDemo) //Symbol(foo)
+
+    let symbolDemo1 = Symbol("foo")
+    console.log(symbolDemo == symbolDemo1) // false
+
+    let symbolDemo2 = Symbol.for("foo")
+    console.log(symbolDemo == symbolDemo2) // true
+
+    let symbolDemo3 = Symbol.for()
+    console.log(symbolDemo3) // Symbol(undefined)
+
+    //Symbol().keyFor()
+    console.log(Symbol.keyFor(symbolDemo2)) // foo
+
+    console.log(Symbol.keyFor(symbolDemo1)) // undefined
+
+/*     console.log(Symbol.keyFor(123)) // Uncaught TypeError: 123 is not a symbol */
+
+    console.log(Symbol.keyFor(symbolDemo3)) // undefined
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
