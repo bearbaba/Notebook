@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    let string1 = "hello"
+    console.log(parseInt(string1)) // NaN
+
+    string1 = "1234bleu"
+    console.log(parseInt(string1)) // 1234
+
+    string1 = "0xAF"
+    console.log(parseInt(string1)) //解释成16进制的数值，不过输出依然是十进制
+
+    string1 = "hell23ff"
+    console.log(parseInt(string1)) // NaN
+
+    string1 = "AF"
+    console.log(parseInt(string1, 16)) //解析成十六进制数 AF 对应的十进制数
+
+    string1 = "0101"
+    console.log(parseInt(string1, 2)) // 解析成二进制数 0101 对应的十进制数
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
