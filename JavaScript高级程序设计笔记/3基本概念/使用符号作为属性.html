@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    let s1 = Symbol("foo"),
+        s2 = Symbol(),
+        s3 = Symbol("s3"),
+        s4 = Symbol("s4")
+    let o = {
+      [s1] : "foo val"
+    }
+
+    console.log(o) //{Symbol(foo): "foo val"}
+
+    Object.defineProperty(o, s2, {value: "fooz"})
+
+    console.log(o) // {Symbol(foo): "foo val", Symbol(): "fooz"}
+
+    Object.defineProperties(o,{
+      [s3]: {value: "s3 val"},
+      [s4]: {value: "s4 val"}
+    })
+
+    console.log(o) // {Symbol(foo): "foo val", Symbol(): "fooz", Symbol(s3): "s3 val", Symbol(s4): "s4 val"}
+
+    // Object.defineProperty 能增添或是修改对象的属性，Object.defineProperties 能增添或者修改多个对象的属性。
+
+
+    // Object.getOwnPropertyNames()、Object.getOwnPropertySymbols()、Object.getOwnPropertyDescriptors()、Reflect.ownKeys() 的使用
+
+    let s11 = Symbol("foo")
+    let s12 = Symbol("fuz")
+
+    let o1 = {
+      [s11]: "foo val",
+      [s12]: "fuz val",
+      t1 : "t1",
+      t2 : "t2"
+    }
+
+    console.log(Object.getOwnPropertyNames(o1)) // (2) ["t1", "t2"]
+    console.log(Object.getOwnPropertySymbols(o1)) // (2) [Symbol(foo), Symbol(fuz)
+
+    console.log(Object.getOwnPropertyDescriptors(o1)) // {t1: {…}, t2: {…}, Symbol(foo): {…}, Symbol(fuz): {…}}
+    console.log(Reflect.ownKeys(o1)) // (4) ["t1", "t2", Symbol(foo), Symbol(fuz)]
+  </script>
+</head>
+<body>
+  
+</body>
+</html>

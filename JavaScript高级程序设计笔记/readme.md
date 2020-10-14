@@ -532,7 +532,7 @@ func('["Name is ", ", age is ", "", raw: Array(3)]', name, age);
 
 Symbol(符号) 是 ES6 新增的数据类型，符号是原始值，且符号实例是唯一不可变的，符号的用途是确保对象属性使用唯一标识符，不会发生属性冲突的危险。
 
-##### 基本用法
+##### Symbol 类型的创建
 
 符号需要使用`Symbol()`函数初始化，因为符号本身是原始类型，所以`typeof`操作符对符号返回`symbol`。
 
@@ -543,6 +543,8 @@ let a = Symbol("foo");
 let b = Symbol("foo");
 console.log(a == b); // false
 ```
+
+可以把`Symbol()`函数括号内的描述信息当成是一段注释。
 
 只需要创建出`Symbol()`实例并将其用作对象的新属性，就可以保证它不会覆盖已有的对象属性，无论是符号属性还是字符串属性。
 
@@ -559,7 +561,80 @@ console.log(c); // Symbol()
 
 ```js
 let mySymbol = Symbol();
-let my = Object(mySymbol)
+let my = Object(mySymbol);
 ```
 
-// Todo 例子准备差不多了，先看书后补笔记
+##### 使用全局符号注册表
+
+在之前的`Symbol`类型变量创建时，我们即使创建了两个描述信息完全相同的变量，它们依然是不等的，但我们可以创建一个全局符号注册表，它允许我们对一个符号实例进行共享与重用。
+
+```js
+let symbolDemo = Symbol.for("foo");
+console.log(symbolDemo); //Symbol(foo)
+
+let symbolDemo1 = Symbol("foo");
+console.log(symbolDemo == symbolDemo1); // false
+
+let symbolDemo2 = Symbol.for("foo");
+console.log(symbolDemo == symbolDemo2); // true
+
+let symbolDemo3 = Symbol.for();
+console.log(symbolDemo3); // Symbol(undefined)
+```
+
+如上述代码所示，`console.log(symbolDemo == symbolDemo2);`输出为`true`表示这两个变量都使用的是`Symbol.for("foo")`。
+
+全局符号与普通符号是不同的，即使它们有着一样的描述信息，对于全局符号，那段描述信息相当于它的键，但需要注意的是作为参数传给`Symbol.for()`的任何值都会被转换成字符串。
+
+我们可以使用`Symbol.keyFor()`来查询全局注册表，这个方法接收符号，返回该全局符号对应的字符串键（也就是传给`Symbol.for()`的参数）。如果查询的不是全局符号，返回值为`undefined`。
+
+```js
+console.log(Symbol.keyFor(symbolDemo2)); // foo
+
+console.log(Symbol.keyFor(symbolDemo1)); // undefined
+
+console.log(Symbol.keyFor(symbolDemo3)); // undefined
+
+console.log(Symbol.keyFor(123)); // Uncaught TypeError: 123 is not a symbol
+```
+
+##### 符号作为属性
+
+可以使用符号作为对象的属性，
+
+```js
+let s1 = Symbol("foo");
+
+let o = {
+  [s1]: "foo val",
+};
+
+console.log(o); //{Symbol(foo): "foo val"}
+```
+
+除了上述的常规写法，也可以使用`Object.defineProperty()`方法或者`Object.defineProperties()`方法定义对象属性，它们增添或者修改对象的属性，不过增添或者修改的属性都不可修改。
+
+```js
+let s1 = Symbol("foo"),
+    s2 = Symbol(),
+    s3 = Symbol("s3"),
+    s4 = Symbol("s4");
+let o = {
+  [s1]: "foo val",
+};
+
+console.log(o); //{Symbol(foo): "foo val"}
+
+Object.defineProperty(o, s2, { value: "fooz" });
+
+console.log(o); // {Symbol(foo): "foo val", Symbol(): "fooz"}
+
+Object.defineProperties(o, {
+  [s3]: { value: "s3 val" },
+  [s4]: { value: "s4 val" },
+});
+
+console.log(o); // {Symbol(foo): "foo val", Symbol(): "fooz", Symbol(s3): "s3 val", Symbol(s4): "s4 val"}
+
+// Object.defineProperty 能增添或是修改对象的属性，Object.defineProperties 能增添或者修改多个对象的属性。
+```
