@@ -616,9 +616,9 @@ console.log(o); //{Symbol(foo): "foo val"}
 
 ```js
 let s1 = Symbol("foo"),
-    s2 = Symbol(),
-    s3 = Symbol("s3"),
-    s4 = Symbol("s4");
+  s2 = Symbol(),
+  s3 = Symbol("s3"),
+  s4 = Symbol("s4");
 let o = {
   [s1]: "foo val",
 };
@@ -638,3 +638,50 @@ console.log(o); // {Symbol(foo): "foo val", Symbol(): "fooz", Symbol(s3): "s3 va
 
 // Object.defineProperty 能增添或是修改对象的属性，Object.defineProperties 能增添或者修改多个对象的属性。
 ```
+
+使用`Object.getOwnPropertyNames()`可以返回对象实例的常规属性数组，`Object.getOwnPropertySymbols()`返回对象实例的符号属性数组。`Object.getOwnPropertyDescriptors()`会返回同时包含常规和符号属性描述符的对象。`Reflect.ownKeys()`会返回两种类型的键：
+
+```js
+let s11 = Symbol("foo");
+let s12 = Symbol("fuz");
+
+let o1 = {
+  [s11]: "foo val",
+  [s12]: "fuz val",
+  t1: "t1",
+  t2: "t2",
+};
+
+console.log(Object.getOwnPropertyNames(o1)); // (2) ["t1", "t2"]
+console.log(Object.getOwnPropertySymbols(o1)); // (2) [Symbol(foo), Symbol(fuz)
+
+console.log(Object.getOwnPropertyDescriptors(o1)); // {t1: {…}, t2: {…}, Symbol(foo): {…}, Symbol(fuz): {…}}
+console.log(Reflect.ownKeys(o1)); // (4) ["t1", "t2", Symbol(foo), Symbol(fuz)]
+```
+
+### 操作符
+
+#### 逻辑非
+
+逻辑非使用一个感叹号`!`。
+
+如果使用连续使用两个感叹号`!!`，相当于使用了`Boolean()`转型函数，第一个感叹号总会返回布尔值，第二个感叹号执行取反操作。
+
+```js
+const color = "blue";
+console.log(!!color); // true
+
+const num = 0;
+console.log(!!num); // false
+```
+
+#### 指数操作符
+
+这是 ES7 新增的操作符，可以用`**`替代`Math.pow()`的功能。
+
+```js
+console.log(2 ** 3); // 8
+
+console.log(4 ** 0.5); // 2
+```
+
