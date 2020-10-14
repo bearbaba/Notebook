@@ -375,11 +375,11 @@ testp.parentNode.insertBefore(newElement, testp);
 
 ```js
 function insertAfter(newElement, targetment) {
-  var parent = targetment.parentNode
+  var parent = targetment.parentNode;
   if (parent.lastChild == targetment) {
-    parent.appendChild(newElement)
+    parent.appendChild(newElement);
   } else {
-    parent.insertBefore(newElement, targetment.nextSibling)
+    parent.insertBefore(newElement, targetment.nextSibling);
   }
 }
 ```
@@ -388,3 +388,139 @@ function insertAfter(newElement, targetment) {
 
 `targetment.nextSibing`就是当前元素的下一个元素，`nextSibing`是一个只读属性，不可更改。
 
+## DOM 操作样式
+
+一般我们把页面分层三层：结构层，表示层，行为层。
+
+结构层依靠 HTML 、XHTML 之类的标记语言负责创建，用于对网页内容的语义做出描述。
+
+表示层依靠 CSS 完成， CSS 描述页面内容应该如何呈现。
+
+行为层负责内容应该如何响应事件。这主要依靠 JS 和 DOM 操作完成。
+
+### style 属性
+
+DOM 上的每个元素节点都有一个属性`style`，`style`属性包含着元素的样式，这个属性是一个对象属性，而不是一个字符串，我们可以通过 DOM 元素节点获取到。
+
+```js
+var node = document.getElementById("p");
+console.log(node.style);
+```
+
+每个在 CSS 上的样式在 DOM 的`style`内都有相应的键值，只不过在 CSS 中依靠"-"连接符的属性换成了驼峰写法。例如`margin-top`对应 DOM 中的样式是`marginTop`。
+
+依靠 DOM 的`style`属性只能访问到内嵌的 CSS 样式，如果 CSS 样式是从外部导入的，那么`style`将无法获取到。
+
+一些值可能并不是 CSS 中设置的值，例如 DOM 的 `style.color`将以 RGB 值返回。
+
+### 设置样式
+
+`style`对象上的各个属性都是可读写，可以通过它们去设置样式。
+
+但是依据单一职责原则，我们应该尽可能使用 CSS 实现表示层的功能，但是在一些 CSS 无法实现的情况下，就能使用 DOM 去实现表示层的功能设置。
+
+表格的隔行变色功能实现：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="./表格隔行变色.js"></script>
+    <script src="./addLoadEvent.js"></script>
+    <link rel="stylesheet" href="./表格隔行变色.css" />
+  </head>
+
+  <body>
+    <table>
+      <caption>
+        Itinerary
+      </caption>
+      <tr>
+        <th>when</th>
+        <th>where</th>
+      </tr>
+      <tr>
+        <td>June 9th</td>
+        <td>Portland Or</td>
+      </tr>
+      <tr>
+        <td>June 10th</td>
+        <td>Seattle</td>
+      </tr>
+      <tr>
+        <td>June 11th</td>
+        <td>Japan Or</td>
+      </tr>
+    </table>
+  </body>
+</html>
+```
+
+这里的 HTML 就是一个很简单的表格结构定义， CSS 样式通过`<link>`标签从外部导入。
+
+```css
+th,
+td {
+  border: 1px solid black;
+}
+
+table {
+  border-collapse: collapse;
+}
+```
+
+CSS 样式主要是实现了表格边框的显示，我们将通过 JS 来实现表格隔行变色功能。
+
+```js
+function changeLineColor() {
+  var tables = document.getElementsByTagName("table");
+  for (var i = 0; i < tables.length; i++) {
+    var odd = false;
+    var rows = tables[i].getElementsByTagName("tr");
+    for (var j = 0; j < rows.length; j++) {
+      if (odd == true) {
+        rows[j].style.backgroundColor = "#ffc";
+        odd = false;
+      } else {
+        odd = true;
+      }
+    }
+  }
+}
+```
+
+这里 DOM 操作逻辑是如果遇到偶数行就更改背景颜色，奇数行就不进行更改。通过`rows[j].style.backgroundColor= "#ffc"`设置背景颜色的样式。
+
+鼠标上移表格字体加粗，在先前的表格基础上，再添加一个鼠标移动到表格哪一行就对表格那一行字体加粗的设置。
+
+```js
+function highlightRows() {
+  console.log("highlightRows");
+  var rows = document.getElementsByTagName("tr");
+  for (var i = 0; i < rows.length; i++) {
+    rows[i].onmouseover = function () {
+      this.style.fontWeight = "bold";
+    };
+
+    rows[i].onmouseout = function () {
+      this.style.fontWeight = "normal";
+    };
+  }
+}
+```
+
+这里主要借助`onmouseover`实现鼠标上移事件的检测，`onmouseout`则是鼠标移走的时间。除了这两个鼠标事件外还有：
+
+```table
+click         当用户按下并释放鼠标按键或其他方式“激活”元素时触发
+contextmenu   可以取消的事件，当上下文菜单即将出现时触发。当前浏览器在鼠标右击时显示上下文菜单
+dblclick      当用户双击鼠标时触发
+mousedown     当用户按下鼠标按键时触发
+mouseup       当用户释放鼠标按键时触发
+mousemove     当用户移动鼠标时触发
+mouseover     当鼠标进入元素时触发。relatedTarget(在IE中是fromElement)指的是鼠标来自的元素
+mouseout      当鼠标离开元素时触发。relatedTarget(在IE中是toElement)指的是鼠标要去往的元素
+```
