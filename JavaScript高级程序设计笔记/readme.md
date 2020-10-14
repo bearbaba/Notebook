@@ -685,3 +685,84 @@ console.log(2 ** 3); // 8
 console.log(4 ** 0.5); // 2
 ```
 
+### 变量、作用域与内存
+
+#### 原始值与引用值
+
+原始值是简单的数据，而引用值则是多个数据组成的对象。引用值可以添加、修改、删除属性。
+
+原始值与引用值在复制及函数值传递上的表现有所不同。
+
+##### 原始值与引用值的创建
+
+```js
+let name = "Mir";
+let name1 = new Object();
+name.age = 13;
+name1.age = 24;
+console.log(name.age); // undefined
+console.log(name1); // {age: 24}
+console.log(name1.age); // 24
+```
+
+`Object`想当于所有对象的祖先，我们可以使用它来创建一个对象。如上述代码所示，原始值不能再增添属性，虽然不会报错，但会显示值未定义。
+
+##### 原始值与引用值的复制
+
+原始值与引用值在复制的表现上各不相同，对于原始值，把它赋值给另一个变量，赋值的是它的一个副本，不会影响原先的值。而引用值赋值给另一个变量时，赋值的是它的引用或者指针，如果修改另一个变量也会影响到原先的引用值。
+
+```js
+let name = "Mir";
+let name1 = new Object();
+name.age = 13;
+name1.age = 24;
+
+// name 把值复制了一份传递给了 name2
+let name2 = name;
+name2 = "3";
+console.log(name); // Mir
+
+// name1 把指针复制了一份传递给了 name3
+let name3 = name1;
+name3.age = 20;
+console.log(name1.age); // 20 name1.age被修改了，因为现在 name3 与 name1指向的是同一个对象
+```
+
+##### 函数中的值传递
+
+EScript 中的所有函数的参数都是按值传递的，值传递时会把参数复制给一个局部函数，对于原始值复制的依然是它的副本，而对于引用值虽然依然会复制它，但是在函数内对引用值的副本进行修改依然会影响到原本身处函数外部的引用值的。
+
+```js
+let person = new Object();
+person.name = "Mir";
+
+function func(obj) {
+  obj.name = "Lance";
+  obj.age = 23;
+}
+
+func(person);
+
+console.log(person.name); // Lance
+```
+
+需要注意的是函数是按值传递的，即复制的是引用值变量而并未非传递的是引用值的指针，
+
+```js
+let a = new Object();
+
+function func(obj) {
+  obj.name = "Mir";
+
+  obj = new Object();
+  obj.name = "Lance";
+  console.log(obj.name); // Lance
+}
+
+func(a);
+
+console.log(a.name); // Mir
+```
+
+如上所示，如果传递进函数内部的是指向变量`a`的指针，那么在函数内部覆盖`obj`的行为（相当于让原先指向`a`的指针重新指向别的位置）也会改变原先的引用值，然而并没有，只不过引用值的副本依然可以指向原引用值的内存位置。
+

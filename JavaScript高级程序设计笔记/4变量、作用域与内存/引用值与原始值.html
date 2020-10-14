@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    let name = "Mir"
+    let name1 = new Object()
+    name.age = 13
+    name1.age = 24
+    console.log(name.age) // undefined
+    console.log(name1) // {age: 24}
+    console.log(name1.age) // 24
+
+    // name 把值复制了一份传递给了 name2
+    let name2 = name
+    name2 = "3"
+    console.log(name) // Mir
+
+    // name1 把指针复制了一份传递给了 name3
+    let name3 = name1
+    name3.age = 20 
+    console.log(name1.age) // 20 name1.age被修改了，因为现在 name3 与 name1指向的是同一个对象
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
