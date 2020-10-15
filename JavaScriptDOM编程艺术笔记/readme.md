@@ -524,3 +524,44 @@ mousemove     当用户移动鼠标时触发
 mouseover     当鼠标进入元素时触发。relatedTarget(在IE中是fromElement)指的是鼠标来自的元素
 mouseout      当鼠标离开元素时触发。relatedTarget(在IE中是toElement)指的是鼠标要去往的元素
 ```
+
+### className
+
+我们可以预先设置好可能会使用上的 CSS 样式，在需要修改某元素样式为设置好的 CSS 样式时，就可以通过修改元素的`className`为该样式名便能使用。
+
+```css
+.intro{
+  font-size: 1.4em;
+  font-weight: bold;
+}
+```
+
+可以使用外部样式表然后进行导入。
+
+然后我们通过`js`文件来使用上述的样式。
+
+```js
+function getNextElement(element){
+  if (element.nodeType == 1){
+    return element
+  }
+
+  if(element.nextSibling){
+    return getNextElement(element.nextSibling)
+  }
+
+  return null
+}
+
+var ps = document.getElementsByTagName("p")
+for(var i = 0; i<ps.length; i++){
+  var elem = getNextElement(ps[i])
+  elem.className = "intro"
+}
+```
+
+在我们导入使用这个 JS 文件之后，我们所有的`p`标签及`p`标签之后的相邻元素的`class`属性都会被修改成`intro`。
+
+`getNextElement`这个自定义函数用于检测相应元素是否为节点元素，然后再检测它的下一个元素是否为节点元素。
+
+我们通过`elem.className = "intro"`修改元素的`class`属性。

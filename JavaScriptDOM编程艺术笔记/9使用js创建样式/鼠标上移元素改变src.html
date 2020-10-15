@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <img src="./index_02.gif" alt="">
+  <script>
+    var img = document.getElementsByTagName("img")
+    img[0].onmouseover=function(){
+      img[0].setAttribute("src", "index2_02.gif")
+    }
+    img[0].onmouseout=function(){
+      img[0].setAttribute("src", "index_02.gif")
+    }
+  </script>
+</body>
+</html>
