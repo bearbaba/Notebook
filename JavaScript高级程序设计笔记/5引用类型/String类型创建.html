@@ -46,6 +46,20 @@
     console.log(str4.endsWith("baz")) // false
 
     console.log(str4.includes("baz")) // true
+
+    let str5 = "hello world   "
+    console.log(str5.trim())
+
+    let str6 = "hello"
+    console.log(str6.padStart(10)) // "     hello"
+    console.log(str6.padStart(10, "!")) // !!!!!hello
+    console.log(str6.padEnd(13, "world")) // helloworldwor
+
+    let str7 = "helllo"
+    let str8 = str7[Symbol.iterator]()
+    console.log(str8.next()) // {value: "h", done: false}done: falsevalue: "h"__proto__: Object
+
+    console.log(str8.next()) // {value: "e", done: false}done: falsevalue: "e"__proto__: Object
   </script>
 </head>
 <body>

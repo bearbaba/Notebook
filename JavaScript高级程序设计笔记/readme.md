@@ -994,3 +994,45 @@ console.log(str4.endsWith("baz")); // false
 
 console.log(str4.includes("baz")); // true
 ```
+
+#### trim
+
+将返回一个删除字符串前后所有空格的字符串副本。
+
+```js
+let str5 = "hello world   ";
+console.log(str5.trim()); //hello world
+```
+
+#### padStart() 和 padEnd() 方法
+
+`padStart()`和`padEnd()`会以指定长度填充字符串，如果小于指定长度，可以指定不同的填充符号或者使用字符串填充，如果不指定，默认以空格进行填充。
+
+```js
+let str6 = "hello";
+console.log(str6.padStart(10)); // "     hello"
+console.log(str6.padStart(10, "!")); // !!!!!hello
+console.log(str6.padEnd(13, "world")); // helloworldwor
+```
+
+#### 字符串迭代与解构
+
+字符串原型上暴露了一个`@@iterator`方法，表示可以迭代字符串上的每个字符。
+
+```js
+let str8 = str7[Symbol.iterator]();
+console.log(str8.next()); // {value: "h", done: false}done: falsevalue: "h"__proto__: Object
+
+console.log(str8.next()); // {value: "e", done: false}done: falsevalue: "e"__proto__: Object
+```
+
+### Math 对象
+
+Math 对象提供了大量数学公式的方法和属性。
+
+`Math.random()`返回一个0~1范围内的随机数，如果要返回一个 1~10 范围的随机数，可以这样：
+
+```js
+console.log(Math.random()*10 +1)
+```
+
