@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    let str1 = new String("Hello World")
+    console.log(str1.charAt(4)) // o
+
+    let oldString = "hello"
+    let newString = oldString.concat("world")
+    console.log(newString) //helloworld
+    
+    let newNewString = oldString.concat(" ", "World", "!")
+    console.log(newNewString) // hello World!
+
+    let str2 = "hello world"
+    console.log(str2.slice(2)) // llo world
+    console.log(str2.substr(2)) // llo world
+    console.log(str2.substring(2)) // llo world
+
+    console.log(str2.slice(2, 5)) // llo
+    console.log(str2.substring(2, 5)) //llo
+    console.log(str2.substr(2, 5)) //llo w
+
+    console.log(str2.slice(-3)) // rld
+    console.log(str2.substring(-3)) // hello world
+    console.log(str2.substr(-3)) // rld
+
+    console.log(str2.slice(2, -3)) // llo wo
+    console.log(str2.substring(2, -3)) // he
+    console.log(str2.substr(2, -3)) // 空的字符串
+
+    let str3 = "hello hello world"
+    console.log(str3.indexOf("hello")) // 0 
+    console.log(str3.lastIndexOf("hello")) // 6
+
+    console.log(str3.indexOf("hello", 3)) // 6
+    console.log(str3.lastIndexOf("hello",str3.length-"world".length)) // 6
+
+    let str4 = "barbazfoo"
+    console.log(str4.startsWith("baz")) // false
+    console.log(str4.startsWith("bar")) // true
+
+    console.log(str4.endsWith("baz")) // false
+
+    console.log(str4.includes("baz")) // true
+  </script>
+</head>
+<body>
+  
+</body>
+</html>

@@ -814,7 +814,7 @@ JS 是使用垃圾回收的语言，由执行环境负责代码执行后的内�
 
 ## 引用类型
 
-### Boolean 类型
+### Boolean 引用值类型
 
 Boolean 是对应布尔值的引用类型，要创建一个`Boolean`对象，就使用`Boolean`构造函数并传入`true`或`false`。
 
@@ -843,7 +843,7 @@ console.log(booleanObject instanceof Boolean); // true
 console.log(booleanValue instanceof Boolean); // false
 ```
 
-### Number 类型
+### Number 引用值类型
 
 Number 类型对象创建与 Boolean 类型对象创建一致，使用`new`来创建。
 
@@ -893,4 +893,104 @@ console.log(Number.isInteger(n1)); // true
 
 let n2 = 99.1;
 console.log(Number.isInteger(n2)); // false
+```
+
+### String 引用值类型
+
+String 是对应字符串的引用类型。它的创建方式与 Number 和 Boolean 类型相似。
+
+```js
+let str1 = new String("Hello World");
+```
+
+它含有大量方法可以使用，以下方法比较常用：
+
+#### charAt
+
+`charAt()`方法返回给定索引位置的字符，由传入方法的整数参数指定。
+
+```js
+let str1 = new String("Hello World");
+console.log(str1.charAt(4)); // o
+```
+
+#### concat
+
+`concat()`方法用于将一个或多个字符串拼接成一个新字符串，并不会销毁原来的字符串。
+
+```js
+let oldString = "hello";
+let newString = oldString.concat("world");
+console.log(newString); //helloworld
+
+let newNewString = oldString.concat(" ", "World", "!");
+console.log(newNewString); // hello World!
+```
+
+`concat()`方法还允许接受多个参数值，然后将多个参数值进行拼接。
+
+#### 字符串截取 slice()、substr() 和 substring()
+
+`slice()`、`substr()`和`substring()`这三个方法以同样的方式被调用。当它们只传入一个正整数参数时，这个正整数参数将被当作截取的起始索引，从这个索引截取到整个字符串。
+
+```js
+let str2 = "hello world";
+console.log(str2.slice(2)); // llo world
+console.log(str2.substr(2)); // llo world
+console.log(str2.substring(2)); // llo world
+```
+
+如果传入的是两个正整数参数，对于`slice()`和`substring()`方法第一个参数仍是子字符串在字符串中的起始索引，而第二个参数则表示在字符串中的结束索引，即在第二个参数所表示的索引值前的字符都会被截取。对于`substr()`，第二个参数表示要截取的字符个数。
+
+```js
+console.log(str2.slice(2, 5)); // llo
+console.log(str2.substring(2, 5)); //llo
+console.log(str2.substr(2, 5)); //llo w
+```
+
+当某个参数是负值时，`slice()`方法会把所有的负值参数都当成字符串长度加上负参数值。
+
+`substr()`方法将第一个参数值当成字符串长度加上该值，将第二个参数当成 0，而`substring()`方法会将所有的负参数值都转换为 0。
+
+```js
+console.log(str2.slice(-3)); // rld
+console.log(str2.substring(-3)); // hello world
+console.log(str2.substr(-3)); // rld
+
+console.log(str2.slice(2, -3)); // llo wo
+console.log(str2.substring(2, -3)); // he
+console.log(str2.substr(2, -3)); // 空的字符串
+```
+
+#### 字符串位置方法 `indexOf()`与`lastIndexOf()`
+
+`indexOf()`表示按照正常顺序，即从左到右查找传入的字符串参数，如果有第二个参数，表示从第二个参数所表示的索引位置开始查找。
+
+`lastIndexOf()`方法则从右到左查找传入的字符串参数，第二个参数也会使它从这个索引位置开始从右至左查找。
+
+```js
+let str3 = "hello hello world";
+console.log(str3.indexOf("hello")); // 0
+console.log(str3.lastIndexOf("hello")); // 6
+
+console.log(str3.indexOf("hello", 3)); // 6
+console.log(str3.lastIndexOf("hello", str3.length - "world".length)); // 6
+```
+
+#### 字符串包含方法
+
+ES6 新增的 3 个用于判断字符串中是否包含另一个字符串的方法：`startsWith()`、`endsWith()`和`includes()`。
+
+这些方法都会从字符串中搜索传入的字符串，并返回一个是否包含的布尔值。
+
+`startsWith()`方法只检查开始于索引 0 的匹配项，`endsWith()`检查开始于索引( string.length - substring.length )的匹配项，`includes()`会检查整个字符串。
+
+```js
+let str4 = "barbazfoo";
+console.log(str4.startsWith("baz")); // false
+console.log(str4.startsWith("bar")); // true
+
+console.log(str4.endsWith("baz")); // false
+
+console.log(str4.includes("baz")); // true
 ```
