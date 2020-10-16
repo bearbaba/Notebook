@@ -804,10 +804,93 @@ JS 是使用垃圾回收的语言，由执行环境负责代码执行后的内�
 
 ##### 引用计数
 
-引用计数的思路是记录每个值被引用的次数，每次这个值被引用一次，这个值的引用数加1，如果保存该值的变量使用了其它值，这个值的引用次数减一，引用数为0时，表示它可以被清除了。
+引用计数的思路是记录每个值被引用的次数，每次这个值被引用一次，这个值的引用数加 1，如果保存该值的变量使用了其它值，这个值的引用次数减一，引用数为 0 时，表示它可以被清除了。
 
 ##### 内存管理
 
 如果一个数据不再必要时，我们应当手动把它设为`null`，手动解除它的引用，这适合于全局变量和全局对象的属性。
 
 尽量使用`let`与`const`，声明变量，这样存在于局部作用域内的变量离开后即能被清理清理掉。
+
+## 引用类型
+
+### Boolean 类型
+
+Boolean 是对应布尔值的引用类型，要创建一个`Boolean`对象，就使用`Boolean`构造函数并传入`true`或`false`。
+
+```js
+let booleanObject = new Boolean(false);
+```
+
+但是布尔引用类型与原始值存在很大区别。例：
+
+```js
+let booleanObject = new Boolean(false);
+console.log(booleanObject);
+let booleanValue = false;
+console.log(booleanObject && true); // true
+console.log(booleanValue && true); // false
+```
+
+布尔类型的对象无论构造函数传入的参数是什么在参与函数表达式时，是转换为`true`的，等于`false`多包装了一层，直接参与比较的不再是`false`，而是包装后的对象。
+
+原始值`false`就是`false`。
+
+`typeof`对布尔对象的返回值是`object`，对原始值返回`boolean`。同样的，布尔对象是布尔类型的实例。
+
+```js
+console.log(booleanObject instanceof Boolean); // true
+console.log(booleanValue instanceof Boolean); // false
+```
+
+### Number 类型
+
+Number 类型对象创建与 Boolean 类型对象创建一致，使用`new`来创建。
+
+```js
+let numObject = new Number(0);
+```
+
+以下方法比较常用，
+
+#### toFixed
+
+`toFixed()`方法返回指定小数点位数的数值字符串。
+
+```js
+let num = 10.12345;
+console.log(num.toFixed(2)); // 10.12
+console.log(num.toFixed(1)); // 10.1
+```
+
+#### toExponential
+
+`toExponential()`方法与`toFixed()`类似，但是它返回的科学计数法表示的数值字符串。
+
+```js
+let n = 99;
+console.log(n.toExponential(1)); //9.9e+1
+```
+
+#### toPrecision
+
+`toPrecision()`方法会根据情况返回最合理的输出结果，可能是固定长度，可能是科学计数法的形式，同样接受一个指定位数的参数。
+
+```js
+let n = 99;
+console.log(n.toPrecision(1)); // 1e+2
+console.log(n.toPrecision(3)); // 99.0
+console.log(n.toPrecision(4)); // 99.00
+```
+
+#### isInteger
+
+`isInteger()`方法用于辨别一个数值是否保存为整数。
+
+```js
+let n1 = 99.0;
+console.log(Number.isInteger(n1)); // true
+
+let n2 = 99.1;
+console.log(Number.isInteger(n2)); // false
+```

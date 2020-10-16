@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    let list = ["2000-04-20", "1934-aaaaa", "1036-2023-1795", "2001-04-32","2004-01-30"]
+    let reg = /\d{4}-\d{2}-\d{2}/
+    for(let i of list){
+      if(reg.test(i)){
+        document.writeln(i)
+      }
+    }
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
