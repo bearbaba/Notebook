@@ -1073,6 +1073,10 @@ console.log(Array.from(set1)); // [1, 2, 3]
 
 `Array.of()`可以把一组参数转换为数组。
 
+在使用`new Array()`创建数组时，存在一个弊端，如果我们给它传入的是一个数字，它会把数组作为数组的长度，但如果我们想要的只是单纯的含有一个数字的数组呢？对于`Array()`构造函数则无法分辨。
+
+`Array.of()`就只会把参数转换为数组，而不会是数组的长度。
+
 #### isArray()
 
 `isArray()`方法用于检测变量是否为数组。
@@ -1162,4 +1166,41 @@ ES 提供两个归并方法：`reduce()`和`reduceRight()`，这两个方法都�
 let arr9 = getArray();
 let sum = arr9.reduce((prev, cur, index, array) => prev + cur);
 console.log(sum); // 45
+```
+
+### Map 类型
+
+Map 类型与对象类型相似，但是在内存管理上比对象类型更精细，更节省内存的使用。
+
+Map 类型的创建：
+
+```js
+let map1 = new Map();
+map1.set("firstName", "Lance");
+map1.set("lastName", "HarPer");
+console.log(map1); // {"firstName" => "Lance", "lastName" => "HarPer"}
+
+let map2 = new Map();
+map2.set("name", "flower").set("color", "red");
+console.log(map2); // {"name" => "flower", "color" => "red"}
+```
+
+Map 类型使用`set()`方法增加一组键值对。
+
+Map 类型含有`get()`方法可以通过指定键获得映射的值，`has()`则是通过键来进行查询，可以使用`delete()`和`clear()`删除值，还能通过`size`属性获取映射的键值对数量。
+
+```js
+let map3 = new Map();
+map3.set("firstName", "Lance").set("lastName", "HarPer");
+
+console.log(map3.has("color")); // false
+console.log(map3.get("firstName")); // Lance
+console.log(map3.size); // 2
+
+map3.delete("lastName");
+console.log(map3); //{"firstName" => "Lance"}
+
+map3.set("color", "blue");
+map3.clear(); // 清空所有键值对
+console.log(map3);
 ```

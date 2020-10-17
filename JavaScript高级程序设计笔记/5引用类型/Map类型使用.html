@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    let map1 = new Map()
+    map1.set("firstName", "Lance")
+    map1.set("lastName", "HarPer")
+    console.log(map1) // {"firstName" => "Lance", "lastName" => "HarPer"}
+
+    let map2 = new Map()
+    map2.set("name", "flower").set("color", "red")
+    console.log(map2) // {"name" => "flower", "color" => "red"}
+
+    let map3 = new Map()
+    map3.set("firstName", "Lance").set("lastName", "HarPer")
+
+    console.log(map3.has("color")) // false
+    console.log(map3.get("firstName")) // Lance
+    console.log(map3.size) // 2
+
+    map3.delete("lastName")
+    console.log(map3) //{"firstName" => "Lance"}
+
+    map3.set("color", "blue")
+    map3.clear() // 清空所有键值对
+    console.log(map3) 
+  </script>
+</head>
+
+<body>
+
+</body>
+
+</html>
