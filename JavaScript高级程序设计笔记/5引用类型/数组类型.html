@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    let arr1 = new Array(20) // 指定创建 length 为20的数组
+    let arr2 = new Array("hi", "hello", "OK"); // 指定创建内容为["hi", "hello", "OK"]的数组
+
+    let arr3 = [1, 3, 4]
+    let arr4 = ["hi", "hello", "OK"]
+
+    console.log(Array.from(arr4.keys())) // [0, 1, 2]
+
+    const str1 = "Mattte"
+    console.log(Array.from(str1)) // ["M", "a", "t", "t", "t", "e"]
+
+    const map1 = new Map().set(1, 2).set(2, 3)
+    console.log(Array.from(map1))
+
+    const set1 = new Set().add(1).add(2).add(3)
+    console.log(Array.from(set1)) // [1, 2, 3]
+
+    let arr5 = [2, 4, 7, 9, 8, 0]
+    console.log(arr5.fill(3)) // [3, 3, 3, 3, 3, 3]
+    console.log(arr5.fill(2, 2, 5)) // [3, 3, 2, 2, 2, 3]
+    console.log(arr5.fill(0, 4, 10)) // [3, 3, 2, 2, 0, 0]
+
+    let arr6 = []
+
+    function getArray() {
+      let arr = []
+      for (let i = 0; i < 10; i++) {
+        arr.push(i)
+      }
+      return arr;
+    }
+
+    arr6 = getArray()
+
+    arr6.copyWithin(0, 5)
+    console.log(arr6) // [5, 6, 7, 8, 9, 5, 6, 7, 8, 9]
+
+    arr6 = getArray()
+    getArray(arr6)
+    arr6.copyWithin(3, 7, 9) 
+    console.log(arr6) // [0, 1, 2, 7, 8, 5, 6, 7, 8, 9]
+
+    let arr7 = getArray()
+    let arr8 = arr7.find((item, index, array)=>{
+      return item > 7
+    })
+    console.log(arr8) 
+  </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

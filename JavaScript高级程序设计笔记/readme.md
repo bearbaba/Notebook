@@ -1030,9 +1030,122 @@ console.log(str8.next()); // {value: "e", done: false}done: falsevalue: "e"__pro
 
 Math 对象提供了大量数学公式的方法和属性。
 
-`Math.random()`返回一个0~1范围内的随机数，如果要返回一个 1~10 范围的随机数，可以这样：
+`Math.random()`返回一个 0~1 范围内的随机数，如果要返回一个 1~10 范围的随机数，可以这样：
 
 ```js
-console.log(Math.random()*10 +1)
+console.log(Math.random() * 10 + 1);
 ```
 
+### Array 引用类型
+
+#### 创建数组
+
+我们依然可以使用构造函数创建数组类型：
+
+```js
+let arr1 = new Array(20); // 指定创建 length 为20的数组
+let arr2 = new Array("hi", "hello", "OK"); // 指定创建内容为["hi", "hello", "OK"]的数组
+```
+
+如上，可以使用构造函数创建指定长度或者指定内容的数组。
+
+我们还能使用数组字面量进行创建：
+
+```js
+let arr3 = [1, 3, 4];
+let arr4 = ["hi", "hello", "OK"];
+```
+
+ES6 新增了两个创建数组的静态方法：`from()`和`of()`。
+
+`Array.from()`的第一个参数是一个类数组对象，即任何可迭代的结构，或者有一个`length`属性和可索引元素的结构。
+
+```js
+const str1 = "Mattte";
+console.log(Array.from(str1)); // ["M", "a", "t", "t", "t", "e"]
+
+const map1 = new Map().set(1, 2).set(2, 3);
+console.log(Array.from(map1));
+
+const set1 = new Set().add(1).add(2).add(3);
+console.log(Array.from(set1)); // [1, 2, 3]
+```
+
+`Array.of()`可以把一组参数转换为数组。
+
+#### isArray()
+
+`isArray()`方法用于检测变量是否为数组。
+
+`isInstanceOf`检测变量是否为数组对象实例时可能会由于这个数组变量来源于其它页面，而不属于当前页面上下文而失效。
+
+#### 迭代器方法
+
+在 ES6 内，Array 的原型上暴露了 3 个用于检索数组内容的方法：`keys()`、`values()`、`entries()`。`keys()`返回数组索引迭代器，`entries()`返回索引/值对的迭代器。
+
+由于这些方法返回的是迭代器，可以使用`Array.from()`方法将它们转换为数组。
+
+```js
+let arr4 = ["hi", "hello", "OK"];
+
+console.log(Array.from(arr4.keys())); // [0, 1, 2]
+```
+
+#### 填充方法 fill()
+
+`fill()`方法是 ES6 新增的方法，只有一个参数时，会把数组的每一项都替换成这个参数内容。第二、第三个参数替换部分的开始索引与结束索引，只有在索引顺序正确时才会起效。
+
+```js
+let arr5 = [2, 4, 7, 9, 8, 0];
+console.log(arr5.fill(3)); // [3, 3, 3, 3, 3, 3]
+console.log(arr5.fill(2, 2, 5)); // [3, 3, 2, 2, 2, 3]
+console.log(arr5.fill(0, 4, 10)); // [3, 3, 2, 2, 0, 0]
+```
+
+#### 批量复制方法 copyWithin()
+
+`copyWithin()`方法会按照指定范围浅复制数组中的部分内容，然后插入到指定索引开始的位置。
+
+```js
+let arr6 = [];
+
+function getArray() {
+  let arr = [];
+  for (let i = 0; i < 10; i++) {
+    arr.push(i);
+  }
+  return arr;
+}
+
+arr6 = getArray();
+
+arr6.copyWithin(0, 5);
+console.log(arr6); // [5, 6, 7, 8, 9, 5, 6, 7, 8, 9]
+
+arr6 = getArray();
+getArray(arr6);
+arr6.copyWithin(3, 7, 9);
+console.log(arr6); // [0, 1, 2, 7, 8, 5, 6, 7, 8, 9]
+```
+
+#### 搜索与位置方法
+
+ES 提供两类搜索数组的方法：按严格相等搜索与按回调函数搜索。
+
+`indexOf()`、`lastIndexOf()`和`includes()`是按严格相等的搜索方法。它们都接受两个参数，第一个参数是要搜索的值，第二参数是搜索的起始索引位置。
+
+`indexOf()`和`lastIndexOf()`如果没有查找到返回-1，`includes()`返回布尔值。
+
+`find()`和`findeIndex()`方法是按照定义的回调函数搜索数组。它们的回调函数都接收三个参数：元素、索引和数组本身。元素是数组中当前搜索的元素，索引是当前元素的索引，而数组是正在搜索的数组，回调函数返回真值
+
+`find()`返回第一个匹配的元素，`findeIndex`返回第一个匹配元素的索引。它们还都接受第二个参数，表示回调函数内部`this`的值。
+
+```js
+let arr7 = getArray();
+let arr8 = arr7.find((item, index, array) => {
+  return item > 7;
+});
+console.log(arr8);
+```
+
+然而这两个方法只会找到匹配的一项，而不是全部匹配元素，并且不会改变原先的数组。
