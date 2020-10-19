@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    let person = {
+      name: "Lance",
+      color: "Red"
+    }
+
+    let {
+      name: name1,
+      color: color1
+    } = person
+    console.log(`name1: ${name1}, color1: ${color1}`)
+
+    let person1 = {
+      name: "Lance",
+      color: "Red"
+    }
+
+    let {
+      name,
+      color
+    } = person1
+
+
+    console.log(name)
+
+    let person2 = {
+      name: "Lance",
+      color: "Red"
+    }
+
+    let name2, color2
+
+    ({
+      name: name2,
+      color: color2
+    } = person2)
+
+    console.log(name2)
+  </script>
+</head>
+
+<body>
+
+</body>
+
+</html>

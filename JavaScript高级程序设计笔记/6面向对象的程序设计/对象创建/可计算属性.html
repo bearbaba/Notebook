@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    let person = {
+      name : "Lance"
+    }
+
+    person.color = "red"
+
+    person["hobby"] = "Code"
+
+    console.log(person)
+    
+    // 以上三种添加的属性的方法，属性名都是字符串的形式。
+
+    person = null
+
+    // 使用可计算属性
+    let name = "name"
+    let color = "color"
+
+    let person1 = {
+      [name]: "Lance",
+      [color]: "color"
+    }
+
+    name = "name1"
+
+    person1[name] = "Harper" // 此时 会新增一个 name1: "Harper" 的键值对，name："Lance" 并没有从对象中删除
+
+    console.log(person1)
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
