@@ -2025,6 +2025,21 @@ function Person(name, age, job) {
 
 在稳妥模式下，即使有其它代码给这个对象添加方法或数据成员，但也不可能会有其它方法访问到传入构造函数中的原始数据。
 
+#### 对象迭代
+
+ES6 新增了两个静态方法`Object.values()`、`Object.entries()`，用于把对象转换为序列化的、可迭代的格式。
+
+```js
+const person = {
+  name: "Lance",
+  color: "Red",
+  boolean: "true",
+};
+
+console.log(Object.values(person)); // ["Lance", "Red", "true"]
+console.log(Object.entries(person)); //  [Array(2), Array(2), Array(2)]
+```
+
 ### 继承
 
 #### 组合继承
@@ -2070,3 +2085,134 @@ instance2.sayAge(); // 27
 在这里，`SuperType`构造函数定义了两个属性：`name`和`colors`。`SuperType`的原型定义了一个方法`sayName()`。`SubType`构造函数在调用`SuperType`构造函数时传入了`name`参数，然后又定义了它自己的属性`age`。将`SuperType`的实例赋值给了`SubType`的原型，然后又在该新原型上定义了方法`sayAge()`。
 
 `instanceof`和`isPrototypeOf()`能够用于识别基于组合继承创建的对象。
+
+### 类
+
+ES6 新增了类的语法糖，在 ES6 里 我们可以使用`class`来实现对象的创建。
+
+#### 类的使用
+
+```js
+class ClassName() {}
+```
+
+类名后的括号可加可不加，这里的这个`className()`就类似于构造函数。
+
+```js
+class Person {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  sayName() {
+    console.log(this.name);
+  }
+}
+
+let per1 = new Person("John", 23);
+console.log(per1);
+```
+
+我们在生成实例时，默认会把实例绑定到`constructor`的`this`上，而在`constructor`以外的函数则会把它们默认添加到原型链上，这样就实现了不同实例不必创建相同实例方法。
+
+#### 静态方法与静态属性
+
+我们还可以使用`static`关键字让类块内定义的方法成为类方法（或者属性），而不必成为实例方法（实例属性）。
+
+```js
+// 静态方法
+
+class Per {
+  constructor(name, color) {
+    this.name = name;
+    this.color = color;
+  }
+
+  static age = 26;
+  static sayHi = function () {
+    console.log("Hi");
+  };
+}
+
+console.log(Per.age); // 26
+Per.sayHi(); // Hi
+```
+
+#### 类的继承
+
+我们可以使用`extends`关键字实现类的继承，不仅仅可以继承类，也可以继承构造函数。
+
+```js
+// 继承
+
+class Plant {
+  constructor() {
+    this.hasLeaves = true;
+  }
+  getHasLeaves() {
+    console.log(this.hasLeaves);
+  }
+}
+
+class Flower extends Plant {
+  constructor(color) {
+    super();
+    this.hasFlowers = this.hasLeaves;
+    this.colorFlower = color;
+  }
+}
+
+let flower1 = new Flower("red");
+flower1.getHasLeaves();
+```
+
+在`constructor()`函数中使用的`super()`可以继承父类的属性与方法。只有在使用它的语句之后，`this`才会生效，如果把`this`相关的语句放在`super()`语句之前，则会报错
+
+`super()`的行为如同构造函数，如需为父类传参，则在使用`super()`时也需传参。
+
+```js
+class Per2 {
+  constructor(name) {
+    this.name = name;
+  }
+  sayName() {
+    console.log(this.name);
+  }
+}
+
+class Stu extends Per2 {
+  constructor(name, age) {
+    super(name);
+    this.age = age;
+  }
+  sayName() {
+    super.sayName(this.name);
+  }
+  sayAge() {
+    console.log(this.age);
+  }
+}
+
+let stu1 = new Stu("green", 26);
+stu1.sayName();
+stu1.sayAge();
+```
+
+可以在静态的方法中使用`super`调用在父类中定义的静态方法。
+
+```js
+class Animal {
+  static saySound(sound) {
+    console.log(sound);
+  }
+}
+
+class Cat extends Animal {
+  static saySound(sound) {
+    super.saySound(sound);
+  }
+}
+
+Cat.saySound("喵");
+```

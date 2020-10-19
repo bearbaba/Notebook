@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    function SuperType(){
+      this.superBoolean = true
+    }
+    SuperType.prototype.getSuperBoolean = function(){
+      return this.superBoolean
+    }
+
+    function SuberType(){
+      this.suberBoolean = false
+    }
+
+    SuberType.prototype = new SuperType()
+
+    SuberType.prototype.getSuber = function(){
+      return this.superBoolean
+    }
+
+    let sub = new SuberType()
+
+    console.log(sub.getSuber())
+    console.log("sub: ", sub)
+    console.log(sub.__proto__)
+    console.log(sub.__proto__.__proto__)
+/*     console.log("sub.prototype: ", sub.prototype)
+    console.log("sub.prototype.prototype: ", sub. prototype.prototype)*/
+  </script>
+</head>
+<body>
+  
+</body>
+</html>
