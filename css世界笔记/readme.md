@@ -395,3 +395,61 @@ div {
 
 ### height: 100%
 
+对于父元素，如果`height`为`auto`，只要子元素在文档流中，其百分比完全就被忽略了。
+
+#### height: 100% 无效的原因
+
+如果包含块的高度没有显示指定，并且该元素不是绝对定位，则计算值为`auto`，`auto`是无法与百分比计算的。
+
+但是，宽度的解释是：如果包含块的宽度取决于该元素的宽度，那么产生的宽度布局实际是“未定义行为”，将由浏览器自行解释。
+
+#### 让元素支持 height: 100% 的效果
+
+##### 设定显示的高度值
+
+给父元素来个具体的高度值，或者可以生效的百分比值。
+
+```css
+html, body{
+    height: 100%;
+}
+```
+
+##### 使用绝对定位
+
+```css
+div{
+    height: 100%;
+    position: absolute;
+}
+```
+
+此时的`height: 100%`会有计算值，即使祖先元素的`height`计算为`auto`也会生效。
+
+绝对定位的宽高百分比计算相对于 padding box 的，也就是会把 padding box 大小值计算在内。非绝对定位元素则是相对于 content box 的。
+
+### min-width/max-width和min-height/max-height
+
+`min-width/max-width`使用的场景必然是自适应布局或者流体布局中，在`width/height`定死的布局中，`min-width/max-width`就没有任何效果，它们具有边界行为的属性，没有变化自然无法触发。
+
+```css
+.container{
+    min-width: 1200px;
+    max-width: 1400px;
+}
+```
+
+可以看到无需`width`设置，直接使用`min-width`或`max-width`即可。
+
+为了避免图片在移动端展示过大影响体验，常常会有如下设置：
+
+```css
+img{
+    max-width: 100%;
+    height: auto !important;
+}
+```
+
+#### `min-width`与`max-width`不同的初始值
+
+`min-width/min-height`
