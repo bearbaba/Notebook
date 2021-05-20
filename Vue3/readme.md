@@ -130,7 +130,7 @@ data() {
 
 一般我们使用它来监听点击事件 `@click` ，不过还包含大量其它事件，例 `mousemove` 等。
 
-监听事件绑定一个函数，可以在 Vue 内部通过 `event` 参数获取默认传递的事件。
+监听事件绑定一个函数，可以在 Vue 内部通过 `event` 参数获取默认传递的事件，在组件内容不加括号表示默认传递一个`event`，在函数定义时如果需要使用到这个`event`，那么就需要定义这个`event`形参。
 
 ``` vue
 <div @click="demoFun">click</div>
@@ -150,7 +150,7 @@ Vue 提供大量修饰符，例如 `.stop` 用于阻止事件冒泡。
 
 ``` vue
 <div @click="shout(2)">
-  <button @click="shout(1)">ok</button>
+  <button @click.stop="shout(1)">ok</button>
 </div>
 ```
 
@@ -160,8 +160,36 @@ Vue 提供大量修饰符，例如 `.stop` 用于阻止事件冒泡。
 
 ### 参数传递
 
-如果希望在执行函数时，还能传递参数给函数，那么默认传递的 `event` 参数需要显式写为 `$event` 。
+如果希望在执行函数时，还能传递事件参数`event`给函数，那么默认传递的 `event` 参数需要显式写为 `$event` ，如果不需要也可以不写，并不会影响到参数传递。
 
 ``` vue
 <input type="text" @keyup.enter="print($event, 'hello')" />
 ```
+
+```vue
+<button @click="addBook($event, index)">+</button>
+addBook(event, index) {
+    console.log(event);
+    this.books[index].num++;
+},
+```
+
+## watch 侦听器
+
+如果想要监测一个数据，根据这个数据的动态变化而使用相应函数，那么可以使用`watch`。
+
+`watch`只能侦听普通变量，对于变量的属于变化是无法侦听到的，如果想要侦听，那么就需要使用`deep`。
+
+```vue
+watch: {
+  obj: {
+    handler(newName, oldName) {
+      console.log('obj.a changed');
+    },
+    immediate: true,
+    deep: true
+  }
+} 
+
+```
+
